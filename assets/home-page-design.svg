@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1440" height="2600" viewBox="0 0 1440 2600">
+  <defs>
+    <linearGradient id="grad-cta" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4aa"/>
+      <stop offset="100%" stop-color="#e040fb"/>
+    </linearGradient>
+    <linearGradient id="grad-logo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4aa"/>
+      <stop offset="100%" stop-color="#e040fb"/>
+    </linearGradient>
+    <linearGradient id="grad-hero-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0d0d1a"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </linearGradient>
+    <linearGradient id="grad-card-overlay" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0.0"/>
+      <stop offset="50%" stop-color="#000000" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Page background -->
+  <rect width="1440" height="2600" fill="#0a0a0f"/>
+
+  <!-- PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+       HEADER
+       PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP -->
+  <g id="Header">
+    <rect width="1440" height="72" fill="#0a0a0f"/>
+    <line x1="0" y1="72" x2="1440" y2="72" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+    <!-- Logo -->
+    <g id="Logo" transform="translate(120, 36)">
+      <circle cx="0" cy="0" r="18" fill="#000000"/>
+      <circle cx="0" cy="0" r="14" fill="none" stroke="url(#grad-logo)" stroke-width="1.2"/>
+      <circle cx="0" cy="0" r="10" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+      <path d="M-6 -6 L0 6 L6 -6" fill="none" stroke="url(#grad-logo)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="28" y="7" font-family="Outfit, sans-serif" font-size="22" font-weight="700" fill="#f0f0f5" letter-spacing="-0.4">VoooAI</text>
+    </g>
+
+    <!-- Nav links -->
+    <text x="1070" y="41" font-family="Outfit, sans-serif" font-size="14" font-weight="500" fill="#8888a0">Pricing</text>
+    <text x="1130" y="41" font-family="Outfit, sans-serif" font-size="14" font-weight="500" fill="#8888a0">Tasks</text>
+
+    <!-- Language dropdown -->
+    <rect x="1200" y="22" width="90" height="28" rx="8" fill="#12121a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <text x="1212" y="40" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">English</text>
+    <path d="M1277 32 L1281 37 L1285 32" fill="none" stroke="#8888a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Profile button -->
+    <circle cx="1388" cy="36" r="18" fill="#12121a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <circle cx="1388" cy="31" r="5" fill="none" stroke="#8888a0" stroke-width="1.5"/>
+    <path d="M1375 52 a13 13 0 0 1 26 0" fill="none" stroke="#8888a0" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+       HERO
+       PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP -->
+  <g id="Hero">
+    <rect y="72" width="1440" height="360" fill="url(#grad-hero-bg)"/>
+    <!-- subtle radial glow behind text -->
+    <radialGradient id="hero-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00d4aa" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#0a0a0f" stop-opacity="0"/>
+    </radialGradient>
+    <rect y="72" width="1440" height="360" fill="url(#hero-glow)"/>
+
+    <text x="720" y="234" text-anchor="middle" font-family="Outfit, sans-serif" font-size="56" font-weight="600" fill="#f0f0f5" letter-spacing="-1.5">Create anything with AI</text>
+    <text x="720" y="274" text-anchor="middle" font-family="Outfit, sans-serif" font-size="18" fill="#8888a0">Automate workflows in one place. Simple, fast, and powerful.</text>
+
+    <!-- CTA Button -->
+    <rect x="630" y="308" width="180" height="48" rx="24" fill="url(#grad-cta)"/>
+    <text x="720" y="338" text-anchor="middle" font-family="Outfit, sans-serif" font-size="16" font-weight="600" fill="#020208">Try workflow</text>
+  </g>
+
+  <!-- PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+       LLM INPUT SECTION
+       PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP -->
+  <g id="LLM-Input-Section" transform="translate(0, 452)">
+    <!-- Tabs -->
+    <rect x="360" y="0" width="74" height="36" rx="8" fill="rgba(0,212,170,0.12)" stroke="#00d4aa" stroke-width="1"/>
+    <text x="397" y="22" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="500" fill="#00d4aa">Image</text>
+    <rect x="442" y="0" width="68" height="36" rx="8" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <text x="476" y="22" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="500" fill="#8888a0">Video</text>
+    <rect x="518" y="0" width="96" height="36" rx="8" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    <text x="566" y="22" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" font-weight="500" fill="#8888a0">Workflow</text>
+
+    <!-- Input wrapper -->
+    <rect x="360" y="50" width="720" height="64" rx="12" fill="#12121a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+    <!-- Gear icon button -->
+    <rect x="368" y="60" width="44" height="44" rx="8" fill="transparent"/>
+    <svg x="379" y="71" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8888a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+
+    <!-- Input placeholder text -->
+    <text x="424" y="87" font-family="Outfit, sans-serif" font-size="15" fill="#8888a0">Describe what you want to create...</text>
+
+    <!-- Sparkle button -->
+    <rect x="970" y="58" width="52" height="48" rx="10" fill="rgba(0,212,170,0.15)" stroke="rgba(0,212,170,0.3)" stroke-width="1"/>
+    <svg x="982" y="70" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00d4aa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+      <path d="M5 3v4"/><path d="M7 5H3"/><path d="M19 17v4"/><path d="M21 19h-4"/>
+    </svg>
+
+    <!-- Submit button -->
+    <rect x="1028" y="58" width="44" height="48" rx="8" fill="url(#grad-cta)"/>
+    <svg x="1037" y="70" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#020208" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>
+    </svg>
+  </g>
+
+  <!-- PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+       TEMPLATES SECTION
+       PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP -->
+  <g id="Templates-Section" transform="translate(0, 620)">
+    <!-- Header -->
+    <text x="720" y="32" text-anchor="middle" font-family="Outfit, sans-serif" font-size="18" font-weight="500" fill="#f0f0f5">Try one of these templates</text>
+    <text x="720" y="58" text-anchor="middle" font-family="Outfit, sans-serif" font-size="15" fill="#8888a0">Start fast with popular workflow templates.</text>
+
+    <!-- Row 1 -->
+    <g id="template-1" transform="translate(240, 82)">
+      <rect width="302" height="152" rx="12" fill="#0e0e1a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <rect width="302" height="152" rx="12" fill="url(#grad-card-overlay)"/>
+      <circle cx="16" cy="132" r="4" fill="url(#grad-cta)"/>
+      <text x="28" y="129" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">Restore and colorize an old</text>
+      <text x="28" y="147" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">damaged photo</text>
+    </g>
+    <g id="template-2" transform="translate(558, 82)">
+      <rect width="302" height="152" rx="12" fill="#0e1018" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <rect width="302" height="152" rx="12" fill="url(#grad-card-overlay)"/>
+      <circle cx="16" cy="132" r="4" fill="url(#grad-cta)"/>
+      <text x="28" y="129" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">Swap portrait background to a</text>
+      <text x="28" y="147" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">clean studio scene</text>
+    </g>
+    <g id="template-3" transform="translate(876, 82)">
+      <rect width="302" height="152" rx="12" fill="#120e18" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <rect width="302" height="152" rx="12" fill="url(#grad-card-overlay)"/>
+      <circle cx="16" cy="132" r="4" fill="url(#grad-cta)"/>
+      <text x="28" y="129" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">Generate hairstyle mockups</text>
+      <text x="28" y="147" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">from my photo</text>
+    </g>
+
+    <!-- Row 2 -->
+    <g id="template-4" transform="translate(240, 250)">
+      <rect width="302" height="152" rx="12" fill="#0e1216" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <rect width="302" height="152" rx="12" fill="url(#grad-card-overlay)"/>
+      <circle cx="16" cy="132" r="4" fill="url(#grad-cta)"/>
+      <text x="28" y="129" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">Create multi-style wedding</text>
+      <text x="28" y="147" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">photo sets</text>
+    </g>
+    <g id="template-5" transform="translate(558, 250)">
+      <rect width="302" height="152" rx="12" fill="#120e12" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <rect width="302" height="152" rx="12" fill="url(#grad-card-overlay)"/>
+      <circle cx="16" cy="132" r="4" fill="url(#grad-cta)"/>
+      <text x="28" y="129" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">Predict future baby portraits</text>
+      <text x="28" y="147" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">from parents</text>
+    </g>
+    <g id="template-6" transform="translate(876, 250)">
+      <rect width="302" height="152" rx="12" fill="#0e1410" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <rect width="302" height="152" rx="12" fill="url(#grad-card-overlay)"/>
+      <circle cx="16" cy="132" r="4" fill="url(#grad-cta)"/>
+      <text x="28" y="129" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">Turn my pet photo into</text>
+      <text x="28" y="147" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">artistic portraits</text>
+    </g>
+
+    <!-- Row 3 -->
+    <g id="template-7" transform="translate(240, 418)">
+      <rect width="302" height="152" rx="12" fill="#120e18" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <rect width="302" height="152" rx="12" fill="url(#grad-card-overlay)"/>
+      <circle cx="16" cy="132" r="4" fill="url(#grad-cta)"/>
+      <text x="28" y="129" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">Generate a music album cover</text>
+      <text x="28" y="147" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">and banner kit</text>
+    </g>
+    <g id="template-8" transform="translate(558, 418)">
+      <rect width="302" height="152" rx="12" fill="#0e0e1a" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <rect width="302" height="152" rx="12" fill="url(#grad-card-overlay)"/>
+      <circle cx="16" cy="132" r="4" fill="url(#grad-cta)"/>
+      <text x="28" y="129" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">Create podcast cover art and</text>
+      <text x="28" y="147" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">episode cards</text>
+    </g>
+    <g id="template-9" transform="translate(876, 418)">
+      <rect width="302" height="152" rx="12" fill="#0e1216" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <rect width="302" height="152" rx="12" fill="url(#grad-card-overlay)"/>
+      <circle cx="16" cy="132" r="4" fill="url(#grad-cta)"/>
+      <text x="28" y="129" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">Make illustrated tutorial</text>
+      <text x="28" y="147" font-family="Outfit, sans-serif" font-size="13" fill="#f0f0f5">material pages</text>
+    </g>
+  </g>
+
+  <!-- PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+       CORE FEATURES
+       PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP -->
+  <g id="Core-Features" transform="translate(0, 1290)">
+    <rect width="1440" height="560" fill="#1A202C"/>
+
+    <text x="720" y="72" text-anchor="middle" font-family="Outfit, sans-serif" font-size="40" font-weight="700" fill="#FFFFFF" letter-spacing="-0.8">Core Features</text>
+    <text x="720" y="108" text-anchor="middle" font-family="Outfit, sans-serif" font-size="18" fill="#B0B0B0">Generate complete industrial-grade workflows with one sentence,</text>
+    <text x="720" y="132" text-anchor="middle" font-family="Outfit, sans-serif" font-size="18" fill="#B0B0B0">easily complete multimedia pipeline operations</text>
+
+    <!-- Feature block helper: icon centered at (36,36) in local coords -->
+    <!-- Row 1, Col 1  Ultimate Vibe Flow -->
+    <g id="feat-vibe-flow" transform="translate(307, 164)">
+      <circle cx="36" cy="36" r="36" fill="none" stroke="#FFC107" stroke-width="2"/>
+      <svg x="18" y="18" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+      </svg>
+      <text x="36" y="100" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">Ultimate Vibe Flow</text>
+      <text x="36" y="124" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">Simple-to-use workflow editor</text>
+      <text x="36" y="143" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">with drag-and-drop interface</text>
+    </g>
+
+    <!-- Row 1, Col 2  Rich Modality Fusion -->
+    <g id="feat-modality" transform="translate(684, 164)">
+      <circle cx="36" cy="36" r="36" fill="none" stroke="#FFC107" stroke-width="2"/>
+      <svg x="18" y="18" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+      </svg>
+      <text x="36" y="100" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">Rich Modality Fusion</text>
+      <text x="36" y="124" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">Combine image, video, audio,</text>
+      <text x="36" y="143" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">and text in unified workflows</text>
+    </g>
+
+    <!-- Row 1, Col 3  Advanced Text Understanding -->
+    <g id="feat-text" transform="translate(1061, 164)">
+      <circle cx="36" cy="36" r="36" fill="none" stroke="#FFC107" stroke-width="2"/>
+      <svg x="18" y="18" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <line x1="10" y1="9" x2="8" y2="9"/>
+      </svg>
+      <text x="36" y="100" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">Advanced Text</text>
+      <text x="36" y="122" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">Understanding</text>
+      <text x="36" y="150" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">Deep natural language</text>
+      <text x="36" y="169" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">understanding</text>
+    </g>
+
+    <!-- Row 2, Col 1  Powerful Concurrent Speed -->
+    <g id="feat-speed" transform="translate(307, 360)">
+      <circle cx="36" cy="36" r="36" fill="none" stroke="#FFC107" stroke-width="2"/>
+      <svg x="18" y="18" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <text x="36" y="100" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">Powerful Concurrent</text>
+      <text x="36" y="122" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">Speed</text>
+      <text x="36" y="150" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">Fast parallel processing for</text>
+      <text x="36" y="169" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">multiple simultaneous tasks</text>
+    </g>
+
+    <!-- Row 2, Col 2  Unlimited Templates -->
+    <g id="feat-templates" transform="translate(684, 360)">
+      <circle cx="36" cy="36" r="36" fill="none" stroke="#FFC107" stroke-width="2"/>
+      <svg x="18" y="18" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      <text x="36" y="100" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">Unlimited Templates</text>
+      <text x="36" y="124" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">Pre-built templates for</text>
+      <text x="36" y="143" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">common use cases</text>
+    </g>
+
+    <!-- Row 2, Col 3  Multi-Style Support -->
+    <g id="feat-multi-style" transform="translate(1061, 360)">
+      <circle cx="36" cy="36" r="36" fill="none" stroke="#FFC107" stroke-width="2"/>
+      <svg x="18" y="18" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#FFC107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.12-.29-.29-.44-.65-.44-1.13a1.65 1.65 0 0 1 1.67-1.67h2c3.05 0 5.56-2.5 5.56-5.56C21.97 6.01 17.46 2 12 2z"/>
+        <circle cx="8.5" cy="7.5" r="1" fill="#FFC107"/><circle cx="13.5" cy="6.5" r="1" fill="#FFC107"/>
+        <circle cx="17.5" cy="10.5" r="1" fill="#FFC107"/><circle cx="6.5" cy="12.5" r="1" fill="#FFC107"/>
+      </svg>
+      <text x="36" y="100" text-anchor="middle" font-family="Outfit, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">Multi-Style Support</text>
+      <text x="36" y="124" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">Various output styles and</text>
+      <text x="36" y="143" text-anchor="middle" font-family="Outfit, sans-serif" font-size="14" fill="#B0B0B0">formats for your vision</text>
+    </g>
+  </g>
+
+  <!-- PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+       PRICING SECTION
+       PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP -->
+  <g id="Pricing-Section" transform="translate(0, 1850)">
+    <text x="720" y="72" text-anchor="middle" font-family="Outfit, sans-serif" font-size="40" font-weight="700" fill="#FFFFFF" letter-spacing="-0.8">Flexible Pricing for Everyone</text>
+    <text x="720" y="108" text-anchor="middle" font-family="Outfit, sans-serif" font-size="18" fill="#B0B0B0">Start free. Upgrade anytime. Downgrade anytime. No hidden fees.</text>
+
+    <!-- Pricing card -->
+    <g id="pricing-card">
+      <rect x="400" y="140" width="640" height="300" rx="20" fill="#1A202C"/>
+
+      <text x="720" y="192" text-anchor="middle" font-family="Outfit, sans-serif" font-size="21" font-weight="700" fill="#FFFFFF">How It Works</text>
+
+      <!-- List item 1 -->
+      <circle cx="432" cy="228" r="5" fill="#3b82f6"/>
+      <text x="450" y="233" font-family="Outfit, sans-serif" font-size="15" fill="#B0B0B0">
+        <tspan font-weight="700" fill="#FFFFFF">Free Plan: </tspan>Use without login or create a free account for weekly credits.
+      </text>
+
+      <!-- List item 2 -->
+      <circle cx="432" cy="265" r="5" fill="#3b82f6"/>
+      <text x="450" y="270" font-family="Outfit, sans-serif" font-size="15" fill="#B0B0B0">
+        <tspan font-weight="700" fill="#FFFFFF">Paid Plan: </tspan>Upgrade to access more credits and advanced features.
+      </text>
+
+      <!-- List item 3 -->
+      <circle cx="432" cy="302" r="5" fill="#3b82f6"/>
+      <text x="450" y="307" font-family="Outfit, sans-serif" font-size="15" fill="#B0B0B0">All prices show total cost. No hidden fees. Cancel subscriptions anytime.</text>
+
+      <!-- Divider -->
+      <line x1="420" y1="330" x2="1020" y2="330" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+      <!-- CTA button -->
+      <rect x="570" y="348" width="300" height="50" rx="12" fill="#3b82f6"/>
+      <text x="720" y="378" text-anchor="middle" font-family="Outfit, sans-serif" font-size="16" font-weight="500" fill="#FFFFFF">View all plans and pricing �</text>
+    </g>
+  </g>
+
+  <!-- PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+       FOOTER
+       PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP -->
+  <g id="Footer" transform="translate(0, 2310)">
+    <rect width="1440" height="290" fill="#12121a"/>
+    <line x1="0" y1="0" x2="1440" y2="0" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+    <!-- Brand -->
+    <text x="120" y="60" font-family="Outfit, sans-serif" font-size="20" font-weight="600" fill="#f0f0f5" letter-spacing="-0.4">VoooAI</text>
+    <text x="120" y="84" font-family="Outfit, sans-serif" font-size="14" fill="#8888a0">Powerful AI Image Generator and AI Video Generator,</text>
+    <text x="120" y="103" font-family="Outfit, sans-serif" font-size="14" fill="#8888a0">completely free and sensitive to your privacy.</text>
+
+    <!-- Quick Links -->
+    <text x="120" y="148" font-family="Outfit, sans-serif" font-size="11" font-weight="600" fill="#8888a0" letter-spacing="0.06em">QUICK LINKS</text>
+    <text x="120" y="172" font-family="Outfit, sans-serif" font-size="14" fill="#f0f0f5">Features</text>
+    <text x="120" y="196" font-family="Outfit, sans-serif" font-size="14" fill="#f0f0f5">FAQ</text>
+    <text x="120" y="220" font-family="Outfit, sans-serif" font-size="14" fill="#f0f0f5">Home Page</text>
+    <text x="120" y="244" font-family="Outfit, sans-serif" font-size="14" fill="#f0f0f5">Subscription package</text>
+    <text x="120" y="268" font-family="Outfit, sans-serif" font-size="14" fill="#f0f0f5">Task management</text>
+
+    <!-- Help and Support -->
+    <text x="520" y="148" font-family="Outfit, sans-serif" font-size="11" font-weight="600" fill="#8888a0" letter-spacing="0.06em">HELP AND SUPPORT</text>
+    <text x="520" y="172" font-family="Outfit, sans-serif" font-size="14" fill="#f0f0f5">Help and support</text>
+    <text x="520" y="196" font-family="Outfit, sans-serif" font-size="14" fill="#f0f0f5">Privacy policy</text>
+    <text x="520" y="220" font-family="Outfit, sans-serif" font-size="14" fill="#f0f0f5">Service terms</text>
+    <text x="520" y="244" font-family="Outfit, sans-serif" font-size="14" fill="#f0f0f5">AI Safety Policy</text>
+
+    <!-- Contact -->
+    <text x="920" y="148" font-family="Outfit, sans-serif" font-size="11" font-weight="600" fill="#8888a0" letter-spacing="0.06em">CONTACT US</text>
+    <text x="920" y="172" font-family="Outfit, sans-serif" font-size="14" fill="#8888a0">Email: <tspan fill="#00d4aa">support@voooai.com</tspan></text>
+    <text x="920" y="196" font-family="Outfit, sans-serif" font-size="14" fill="#8888a0">We typically respond within 48 hours</text>
+    <text x="920" y="232" font-family="Outfit, sans-serif" font-size="14" font-weight="500" fill="#f0f0f5">Join Our Community</text>
+  </g>
+
+</svg>

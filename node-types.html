@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node Types — VoooAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #060611;
+      --bg-surface: #10101b;
+      --accent-cyan: #00d4aa;
+      --accent-magenta: #e040fb;
+      --text-primary: #f5f5fb;
+      --text-muted: #8b8ba3;
+      --border-subtle: rgba(255,255,255,0.06);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background-color: #050511;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-primary);
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 2rem 3rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .page-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-header p {
+      margin-top: 0.4rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Grid layout ── */
+    .nodes-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3.5rem 4rem;
+      padding: 3rem 3.5rem 4rem;
+      justify-content: flex-start;
+    }
+
+    /* ── Node showcase item ── */
+    .node-showcase {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .node-wrapper {
+      zoom: 1.7;
+      position: relative;
+      /* Extra padding so ports aren't clipped */
+      padding: 0 6px;
+    }
+    .node-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+      text-align: center;
+    }
+    .node-sublabel {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.3);
+      text-align: center;
+      margin-top: -0.5rem;
+    }
+
+    /* ─────────────────────────────────────────────────
+       NODE STYLES  (extracted from workflow.html)
+    ───────────────────────────────────────────────── */
+    .workflow-node {
+      position: relative;
+      width: 220px;
+      min-width: 160px;
+      min-height: 90px;
+      border-radius: 14px;
+      color: var(--text-primary);
+      font-size: 0.56rem;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Themes */
+    .workflow-node.theme-cyan   { background:#1a2f38; border:1px solid rgba(0,212,170,0.5);   box-shadow:0 0 24px rgba(0,212,170,0.25); }
+    .workflow-node.theme-violet { background:#2a1f3d; border:1px solid rgba(139,92,246,0.5);  box-shadow:0 0 24px rgba(139,92,246,0.25); }
+    .workflow-node.theme-amber  { background:#3d2e1a; border:1px solid rgba(245,158,11,0.5);  box-shadow:0 0 24px rgba(245,158,11,0.2); }
+    .workflow-node.theme-pink   { background:#3F202B; border:1px solid rgba(224,64,251,0.5);  box-shadow:0 0 24px rgba(224,64,251,0.2); }
+    .workflow-node.theme-emerald{ background:#1a2f28; border:1px solid rgba(16,185,129,0.5);  box-shadow:0 0 24px rgba(16,185,129,0.2); }
+    .workflow-node.theme-blue   { background:#202B3F; border:1px solid rgba(100,149,237,0.6); box-shadow:0 0 24px rgba(100,149,237,0.35); }
+
+    /* Header */
+    .workflow-node .node-header {
+      padding: 0.45rem 0.75rem 0.4rem;
+      font-weight: 600;
+      font-size: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      flex-shrink: 0;
+    }
+    .workflow-node.theme-cyan    .node-header { border-bottom-color: rgba(0,212,170,0.4); }
+    .workflow-node.theme-violet  .node-header { border-bottom-color: rgba(139,92,246,0.4); }
+    .workflow-node.theme-amber   .node-header { border-bottom-color: rgba(245,158,11,0.4); }
+    .workflow-node.theme-pink    .node-header { border-bottom-color: rgba(224,64,251,0.4); }
+    .workflow-node.theme-emerald .node-header { border-bottom-color: rgba(16,185,129,0.4); }
+    .workflow-node.theme-blue    .node-header { border-bottom-color: rgba(100,149,237,0.4); }
+
+    /* Body */
+    .workflow-node .node-body {
+      flex: 1;
+      padding: 0.5rem 0.75rem 0.75rem;
+      min-height: 40px;
+    }
+    .workflow-node .node-content-inner {
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      min-height: 40px;
+      position: relative;
+      font-size: 0.53rem;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.9);
+    }
+    .workflow-node.theme-cyan    .node-content-inner { background:#132228; }
+    .workflow-node.theme-violet  .node-content-inner { background:#1f1630; }
+    .workflow-node.theme-amber   .node-content-inner { background:#2d2212; }
+    .workflow-node.theme-pink    .node-content-inner { background:#341A24; }
+    .workflow-node.theme-emerald .node-content-inner { background:#13221c; }
+    .workflow-node.theme-blue    .node-content-inner { background:#1A2434; }
+
+    /* Placeholder text */
+    .node-placeholder {
+      color: rgba(255,255,255,0.45);
+      display: block;
+    }
+    .node-output-placeholder {
+      color: rgba(255,255,255,0.35);
+      font-style: italic;
+    }
+
+    /* Textarea */
+    .node-content-input {
+      width: 100%;
+      min-height: 2.5em;
+      padding: 0.4rem 0.6rem;
+      background: #1A202C;
+      color: #F7FAFC;
+      border: none;
+      border-radius: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.52rem;
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+    }
+    .node-content-input::placeholder { color: rgba(247,250,252,0.5); }
+
+    /* File input upload area */
+    .node-image-upload-area {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      min-height: 40px;
+    }
+    .node-image-placeholder-text {
+      color: rgba(255,255,255,0.45);
+      font-size: 0.53rem;
+    }
+
+    /* Upload icon button */
+    .node-upload-icon {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.5rem;
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.7);
+      cursor: default;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .node-upload-icon svg { width: 16px; height: 16px; }
+
+    /* Engine output area */
+    .node-output-result {
+      width: 100%;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Bot content area */
+    .node-bot-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    /* Export All button */
+    .node-export-all-btn {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(224,64,251,0.25);
+      background: rgba(224,64,251,0.08);
+      color: rgba(224,64,251,0.6);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 600;
+      cursor: default;
+    }
+
+    /* Ports */
+    .node-input,
+    .node-output {
+      position: absolute;
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: -4px;
+      box-sizing: border-box;
+      z-index: 2;
+    }
+    .node-input {
+      left: -4px;
+      border: 1.5px solid rgba(255,255,255,0.4);
+    }
+    .node-output {
+      right: -4px;
+      border: 1.5px solid rgba(255,255,255,0.4);
+    }
+    .workflow-node.theme-cyan    .node-input, .workflow-node.theme-cyan    .node-output { background:#132228; }
+    .workflow-node.theme-violet  .node-input, .workflow-node.theme-violet  .node-output { background:#1f1630; }
+    .workflow-node.theme-amber   .node-input, .workflow-node.theme-amber   .node-output { background:#2d2212; }
+    .workflow-node.theme-pink    .node-input, .workflow-node.theme-pink    .node-output { background:#341A24; }
+    .workflow-node.theme-emerald .node-input, .workflow-node.theme-emerald .node-output { background:#13221c; }
+    .workflow-node.theme-blue    .node-input, .workflow-node.theme-blue    .node-output { background:#1A2434; }
+
+    /* Footer */
+    .workflow-node .node-footer {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.35rem 0.5rem;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.15);
+      border-radius: 0 0 14px 14px;
+      position: relative;
+    }
+    .workflow-node.theme-cyan    .node-footer { border-top-color: rgba(0,212,170,0.3); }
+    .workflow-node.theme-violet  .node-footer { border-top-color: rgba(139,92,246,0.3); }
+    .workflow-node.theme-amber   .node-footer { border-top-color: rgba(245,158,11,0.3); }
+    .workflow-node.theme-pink    .node-footer { border-top-color: rgba(224,64,251,0.3); }
+    .workflow-node.theme-emerald .node-footer { border-top-color: rgba(16,185,129,0.3); }
+    .workflow-node.theme-blue    .node-footer { border-top-color: rgba(100,149,237,0.3); }
+
+    .node-actions { display: flex; gap: 0.2rem; }
+    .node-action-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: none;
+      background: rgba(0,0,0,0.4);
+      color: rgba(255,255,255,0.8);
+      cursor: default;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .node-action-btn svg { width: 12px; height: 12px; }
+
+    .node-resize-handle {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      cursor: nwse-resize;
+    }
+
+    /* Section dividers */
+    .section-divider {
+      width: 100%;
+      padding: 0 3.5rem;
+      margin-bottom: -1rem;
+    }
+    .section-divider h2 {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>Node Types</h1>
+    <p>One example of each node category available in the VoooAI workflow canvas.</p>
+  </div>
+
+  <!-- INPUT NODES -->
+  <div class="section-divider" style="padding-top:2.5rem"><h2>Input Nodes</h2></div>
+  <div class="nodes-grid">
+
+    <!-- 1. File Input -->
+    <div class="node-showcase">
+      <div class="node-wrapper">
+        <div class="workflow-node theme-emerald" data-type="File input">
+          <!-- Output port -->
+          <span class="node-output" style="top:50%"></span>
+          <div class="node-header">File input #1</div>
+          <div class="node-body">
+            <div class="node-content-inner" style="min-height:52px;">
+              <div class="node-image-upload-area">
+                <span class="node-image-placeholder-text">Upload or select a file...</span>
+              </div>
+              <button class="node-upload-icon" tabindex="-1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="node-footer">
+            <div class="node-actions">
+              <!-- Copy -->
+              <button class="node-action-btn" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 9h9q2 0 2 2v9q0 2-2 2h-9q-2 0-2-2v-9q0-2 2-2z"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <!-- Delete -->
+              <button class="node-action-btn" title="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M10 11v6 M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+            <div class="node-resize-handle"></div>
+          </div>
+        </div>
+      </div>
+      <div class="node-label">File Input</div>
+      <div class="node-sublabel">theme-emerald · 0 in · 1 out</div>
+    </div>
+
+    <!-- 2. Prompt Input -->
+    <div class="node-showcase">
+      <div class="node-wrapper">
+        <div class="workflow-node theme-cyan" data-type="Prompt input">
+          <!-- Output port -->
+          <span class="node-output" style="top:50%"></span>
+          <div class="node-header">Prompt input #2</div>
+          <div class="node-body">
+            <div class="node-content-inner" style="min-height:52px; padding:0;">
+              <textarea class="node-content-input" rows="3" placeholder="Enter your prompt here..." style="position:static;width:100%;padding:0.4rem 0.6rem;min-height:52px;"></textarea>
+            </div>
+          </div>
+          <div class="node-footer">
+            <div class="node-actions">
+              <button class="node-action-btn" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 9h9q2 0 2 2v9q0 2-2 2h-9q-2 0-2-2v-9q0-2 2-2z"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <button class="node-action-btn" title="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M10 11v6 M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+            <div class="node-resize-handle"></div>
+          </div>
+        </div>
+      </div>
+      <div class="node-label">Prompt Input</div>
+      <div class="node-sublabel">theme-cyan · 0 in · 1 out</div>
+    </div>
+
+  </div><!-- /nodes-grid -->
+
+  <!-- ENGINE NODES -->
+  <div class="section-divider"><h2>Engine Nodes</h2></div>
+  <div class="nodes-grid">
+
+    <!-- 3. Image Engine -->
+    <div class="node-showcase">
+      <div class="node-wrapper">
+        <div class="workflow-node theme-blue" data-type="Image — DALL-E 3">
+          <!-- Input ports (2) -->
+          <span class="node-input" style="top:33.3%"></span>
+          <span class="node-input" style="top:66.7%"></span>
+          <!-- Output port -->
+          <span class="node-output" style="top:50%"></span>
+          <div class="node-header">Image — DALL-E 3 #3</div>
+          <div class="node-body">
+            <div class="node-content-inner" style="min-height:60px;">
+              <div class="node-output-result">
+                <span class="node-placeholder node-output-placeholder">Output will appear here</span>
+              </div>
+            </div>
+          </div>
+          <div class="node-footer">
+            <div class="node-actions">
+              <button class="node-action-btn" title="Run">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 3l14 9-14 9V3z"/>
+                </svg>
+              </button>
+              <button class="node-action-btn" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 9h9q2 0 2 2v9q0 2-2 2h-9q-2 0-2-2v-9q0-2 2-2z"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <button class="node-action-btn" title="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M10 11v6 M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+            <div class="node-resize-handle"></div>
+          </div>
+        </div>
+      </div>
+      <div class="node-label">Image Engine</div>
+      <div class="node-sublabel">theme-blue · 2 in · 1 out</div>
+    </div>
+
+    <!-- 4. Video Engine -->
+    <div class="node-showcase">
+      <div class="node-wrapper">
+        <div class="workflow-node theme-violet" data-type="Video — Sora">
+          <span class="node-input" style="top:33.3%"></span>
+          <span class="node-input" style="top:66.7%"></span>
+          <span class="node-output" style="top:50%"></span>
+          <div class="node-header">Video — Sora #4</div>
+          <div class="node-body">
+            <div class="node-content-inner" style="min-height:60px;">
+              <div class="node-output-result">
+                <span class="node-placeholder node-output-placeholder">Output will appear here</span>
+              </div>
+            </div>
+          </div>
+          <div class="node-footer">
+            <div class="node-actions">
+              <button class="node-action-btn" title="Run">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 3l14 9-14 9V3z"/>
+                </svg>
+              </button>
+              <button class="node-action-btn" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 9h9q2 0 2 2v9q0 2-2 2h-9q-2 0-2-2v-9q0-2 2-2z"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <button class="node-action-btn" title="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M10 11v6 M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+            <div class="node-resize-handle"></div>
+          </div>
+        </div>
+      </div>
+      <div class="node-label">Video Engine</div>
+      <div class="node-sublabel">theme-violet · 2 in · 1 out</div>
+    </div>
+
+    <!-- 5. Audio Engine -->
+    <div class="node-showcase">
+      <div class="node-wrapper">
+        <div class="workflow-node theme-amber" data-type="Audio — ElevenLabs">
+          <span class="node-input" style="top:33.3%"></span>
+          <span class="node-input" style="top:66.7%"></span>
+          <span class="node-output" style="top:50%"></span>
+          <div class="node-header">Audio — ElevenLabs #5</div>
+          <div class="node-body">
+            <div class="node-content-inner" style="min-height:60px;">
+              <div class="node-output-result">
+                <span class="node-placeholder node-output-placeholder">Output will appear here</span>
+              </div>
+            </div>
+          </div>
+          <div class="node-footer">
+            <div class="node-actions">
+              <button class="node-action-btn" title="Run">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 3l14 9-14 9V3z"/>
+                </svg>
+              </button>
+              <button class="node-action-btn" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 9h9q2 0 2 2v9q0 2-2 2h-9q-2 0-2-2v-9q0-2 2-2z"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <button class="node-action-btn" title="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M10 11v6 M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+            <div class="node-resize-handle"></div>
+          </div>
+        </div>
+      </div>
+      <div class="node-label">Audio Engine</div>
+      <div class="node-sublabel">theme-amber · 2 in · 1 out</div>
+    </div>
+
+  </div><!-- /nodes-grid -->
+
+  <!-- BOT NODES -->
+  <div class="section-divider"><h2>Bot Nodes</h2></div>
+  <div class="nodes-grid">
+
+    <!-- 6. Bot (Claude) -->
+    <div class="node-showcase">
+      <div class="node-wrapper">
+        <div class="workflow-node theme-pink" data-type="Bot — Claude">
+          <span class="node-input"  style="top:50%"></span>
+          <span class="node-output" style="top:50%"></span>
+          <div class="node-header">Bot — Claude #6</div>
+          <div class="node-body">
+            <div class="node-content-inner" style="background:transparent; padding:0;">
+              <div class="node-bot-content">
+                <textarea class="node-content-input" rows="2" placeholder="Describe what you want the bot to do..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="node-footer">
+            <div class="node-actions">
+              <button class="node-action-btn" title="Run">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 3l14 9-14 9V3z"/>
+                </svg>
+              </button>
+              <button class="node-action-btn" title="Copy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 9h9q2 0 2 2v9q0 2-2 2h-9q-2 0-2-2v-9q0-2 2-2z"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+              <button class="node-action-btn" title="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M10 11v6 M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+            <div class="node-resize-handle"></div>
+          </div>
+        </div>
+      </div>
+      <div class="node-label">Bot</div>
+      <div class="node-sublabel">theme-pink · 1 in · 1 out</div>
+    </div>
+
+    <!-- 7. Bot — Export All -->
+    <div class="node-showcase">
+      <div class="node-wrapper">
+        <div class="workflow-node theme-pink" data-type="Bot — Export All">
+          <span class="node-input" style="top:50%"></span>
+          <div class="node-header">Bot — Export All #7</div>
+          <div class="node-body">
+            <div class="node-content-inner">
+              <button class="node-export-all-btn">Export all</button>
+            </div>
+          </div>
+          <div class="node-footer">
+            <div class="node-actions">
+              <!-- Export all action -->
+              <button class="node-action-btn" title="Export all">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </button>
+              <!-- Delete -->
+              <button class="node-action-btn" title="Delete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18 M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6 M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M10 11v6 M14 11v6"/>
+                </svg>
+              </button>
+            </div>
+            <div class="node-resize-handle"></div>
+          </div>
+        </div>
+      </div>
+      <div class="node-label">Bot — Export All</div>
+      <div class="node-sublabel">theme-pink · 1 in · 0 out</div>
+    </div>
+
+  </div><!-- /nodes-grid -->
+
+</body>
+</html>

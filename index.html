@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoooAI — AI Multi-Media Generation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0a0a0f;
+      --bg-card: #12121a;
+      --bg-card-hover: #1a1a26;
+      --accent-cyan: #00d4aa;
+      --accent-magenta: #e040fb;
+      --accent-amber: #ffb74d;
+      --text-primary: #f0f0f5;
+      --text-muted: #8888a0;
+      --border-subtle: rgba(255,255,255,0.06);
+      --glow-cyan: rgba(0, 212, 170, 0.25);
+      --glow-magenta: rgba(224, 64, 251, 0.2);
+      --glow-amber: rgba(255, 183, 77, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Hero background - workflow image above templates section */
+    .hero-wrapper {
+      position: relative;
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: url('assets/workflow-bg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0 -2rem;
+      padding: 2rem;
+    }
+    .hero-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(10,10,15,0.6) 0%, rgba(10,10,15,0.85) 100%);
+      pointer-events: none;
+    }
+
+    .header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon svg { width: 100%; height: 100%; }
+    .logo:hover .logo-icon { filter: drop-shadow(0 0 8px rgba(0,212,170,0.5)); }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .header-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .header-nav a:hover {
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.06);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1.5rem;
+      margin-left: auto;
+    }
+
+    .lang-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888a0' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      padding-right: 2rem;
+    }
+    .lang-select:hover, .lang-select:focus {
+      border-color: var(--accent-cyan);
+      outline: none;
+    }
+
+    .profile-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 50%;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .profile-btn:hover {
+      color: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px var(--glow-cyan);
+    }
+    .profile-btn svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    main {
+      position: relative;
+      z-index: 5;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem 6rem;
+      text-align: center;
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+    }
+    .hero h1 {
+      font-size: clamp(2.25rem, 5vw, 3.5rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 3.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-cta {
+      margin-top: 2rem;
+    }
+    .btn-try-workflow {
+      display: inline-block;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      border: none;
+      color: #020208;
+      padding: 0.85rem 2rem;
+      border-radius: 999px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+    .btn-try-workflow:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.7);
+    }
+
+    .templates-section {
+      margin-top: 3rem;
+      text-align: left;
+    }
+    .templates-header {
+      max-width: 640px;
+      margin: 0 auto 1.5rem;
+    }
+    .templates-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.25rem;
+    }
+    .templates-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+      max-width: 960px;
+      margin: 0.5rem auto 0;
+    }
+    @media (max-width: 960px) {
+      .templates-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 640px) {
+      .templates-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .template-card {
+      position: relative;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      line-height: 1.4;
+      display: flex;
+      align-items: flex-end;
+      gap: 0.5rem;
+      min-height: 140px;
+      background-size: cover;
+      background-position: center;
+      background-color: #0c0c14;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .template-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 212, 170, 0.4);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 212, 170, 0.15);
+    }
+    .template-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+      pointer-events: none;
+    }
+    .template-card-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .template-card-content .template-bullet,
+    .template-card-content > span:last-child {
+      position: relative;
+    }
+    .template-bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      margin-top: 0.4em;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      flex-shrink: 0;
+    }
+
+    /* LLM input section */
+    .llm-input-section {
+      max-width: 720px;
+      margin: 0 auto 2.5rem;
+      text-align: left;
+    }
+    .llm-tabs {
+      display: flex;
+      gap: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .llm-tab {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .llm-tab:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+    }
+    .llm-tab.is-active {
+      background: rgba(0, 212, 170, 0.12);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+    .llm-input-wrapper {
+      display: flex;
+      gap: 0.5rem;
+      align-items: stretch;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 0.5rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .llm-input-wrapper:focus-within {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px var(--glow-cyan);
+    }
+    .llm-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.95rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+    }
+    .llm-input::placeholder {
+      color: var(--text-muted);
+    }
+    .llm-random-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      min-width: 44px;
+      background: rgba(0, 212, 170, 0.15);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 10px;
+      color: var(--accent-cyan);
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .llm-random-btn:hover {
+      background: rgba(0, 212, 170, 0.25);
+      box-shadow: 0 0 16px var(--glow-cyan);
+      transform: scale(1.02);
+    }
+    .llm-random-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+    .llm-icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      min-width: 40px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+    }
+    .llm-icon-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.06);
+    }
+    .llm-icon-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+    .llm-submit-btn {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      color: #020208;
+    }
+    .llm-submit-btn:hover {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      filter: brightness(1.1);
+      box-shadow: 0 0 16px var(--glow-cyan);
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-subtle);
+      padding: 3rem 2rem 2rem;
+      margin-top: 4rem;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-brand {
+      margin-bottom: 2rem;
+    }
+    .footer-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3rem;
+    }
+    @media (max-width: 768px) {
+      .footer-columns {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+    .footer-brand h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .footer-brand p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 320px;
+    }
+    .footer-section h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .footer-links {
+      list-style: none;
+    }
+    .footer-links li {
+      margin-bottom: 0.5rem;
+    }
+    .footer-links a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: var(--accent-cyan);
+    }
+    .footer-email {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .footer-email a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+    .footer-email a:hover {
+      text-decoration: underline;
+    }
+    .response-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      opacity: 0.9;
+    }
+    .footer-community {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-top: 1rem;
+      color: var(--text-primary);
+    }
+
+    /* Generation modal */
+    .gen-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .gen-modal-overlay.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .gen-modal {
+      width: 100%;
+      max-width: 560px;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 1.25rem;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      text-align: left;
+      transform: scale(0.95);
+      transition: transform 0.25s ease;
+    }
+    .gen-modal-overlay.is-open .gen-modal {
+      transform: scale(1);
+    }
+    .gen-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .gen-modal-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .gen-modal-close {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: rgba(255,255,255,0.06);
+      border-radius: 10px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s, background 0.2s;
+    }
+    .gen-modal-close:hover {
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.1);
+    }
+    .gen-modal-close svg { width: 20px; height: 20px; }
+    .gen-prompt-display {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      line-height: 1.4;
+    }
+    .gen-preview-wrap {
+      position: relative;
+      aspect-ratio: 1;
+      max-height: 280px;
+      background: #0a0a12;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .gen-preview-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: auto;
+    }
+    .gen-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1.5rem;
+    }
+    .gen-loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--accent-cyan);
+      border-radius: 50%;
+      animation: gen-spin 0.9s linear infinite;
+    }
+    @keyframes gen-spin { to { transform: rotate(360deg); } }
+    .gen-loading-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .gen-loading-progress {
+      width: 100%;
+      max-width: 200px;
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .gen-loading-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .gen-preview-wrap.is-loading .gen-result { display: none; }
+    .gen-result {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gen-preview-wrap:not(.is-loading) .gen-loading { display: none; }
+    .gen-modal-section {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .gen-section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .gen-export-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .gen-export-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .gen-export-btn:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(0,212,170,0.08);
+      color: var(--accent-cyan);
+    }
+    .gen-export-btn svg { width: 16px; height: 16px; }
+    .gen-advanced-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.6rem 0;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .gen-advanced-toggle:hover { color: var(--accent-cyan); }
+    .gen-advanced-toggle svg {
+      width: 18px; height: 18px;
+      transition: transform 0.2s ease;
+    }
+    .gen-advanced-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+    .gen-advanced-content { display: none; padding-top: 0.75rem; }
+    .gen-advanced-content.is-open { display: block; }
+    .gen-advanced-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .gen-advanced-row:last-child { margin-bottom: 0; }
+    .gen-advanced-field { flex: 1; min-width: 120px; }
+    .gen-advanced-field label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+    .gen-advanced-field select {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-card-hover);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .gen-advanced-field select:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+    }
+    .gen-modal-footer {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .gen-try-workflow {
+      display: block;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      border: none;
+      color: #020208;
+      padding: 0.7rem 1.4rem;
+      border-radius: 999px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+    }
+    .gen-try-workflow:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+    }
+
+    /* Core Features section */
+    .core-features-section {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 4rem 2rem 4.5rem;
+      margin: 4rem -2rem 0;
+    }
+    .core-features-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .core-features-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .core-features-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 640px;
+      margin: 0 auto 3rem;
+    }
+    .core-features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem 2rem;
+    }
+    @media (max-width: 900px) {
+      .core-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .core-features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .core-feature-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .core-feature-icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(0,212,170,0.4);
+      background: rgba(0,212,170,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      flex-shrink: 0;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    .core-feature-block:hover .core-feature-icon-wrap {
+      border-color: var(--accent-cyan);
+      background: rgba(0,212,170,0.12);
+      box-shadow: 0 0 20px var(--glow-cyan);
+    }
+    .core-feature-icon-wrap svg {
+      width: 30px;
+      height: 30px;
+      color: var(--accent-cyan);
+      stroke: currentColor;
+      fill: none;
+    }
+    .core-feature-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .core-feature-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 300px;
+    }
+
+    /* Pricing Plan section */
+    .pricing-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem 2rem;
+      text-align: center;
+    }
+    .pricing-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .pricing-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 3rem;
+    }
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 1.25rem;
+      padding: 2.5rem 2.5rem 3rem;
+      max-width: 640px;
+      margin: 0 auto;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+    .pricing-card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+    }
+    .pricing-list {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+    .pricing-list li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .pricing-list li:last-child {
+      margin-bottom: 0;
+    }
+    .pricing-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+    }
+    .pricing-list li strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .pricing-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 1.5rem 0;
+    }
+    .pricing-cta {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      color: #020208;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.85rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+    }
+    .pricing-cta:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="/" class="logo">
+      <span class="logo-icon">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logo-v-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#00d4aa"/>
+              <stop offset="100%" style="stop-color:#e040fb"/>
+            </linearGradient>
+            <filter id="logo-glow">
+              <feGaussianBlur stdDeviation="0.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <circle cx="16" cy="16" r="14" fill="none" stroke="url(#logo-v-gradient)" stroke-width="1.2" filter="url(#logo-glow)"/>
+          <circle cx="16" cy="16" r="10" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+          <circle cx="16" cy="16" r="6" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="0.8"/>
+          <path d="M10 10 L16 22 L22 10" fill="none" stroke="url(#logo-v-gradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#logo-glow)"/>
+        </svg>
+      </span>
+      <span>VoooAI</span>
+    </a>
+    <div class="header-actions">
+      <nav class="header-nav">
+        <a href="#">Pricing</a>
+      </nav>
+      <select class="lang-select" id="lang" aria-label="Language">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+      </select>
+      <button type="button" class="profile-btn" aria-label="Profile">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M20 21a8 8 0 0 0-16 0"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero-wrapper">
+      <section class="hero">
+        <h1>Create anything with AI</h1>
+        <p>Automate workflows in one place. Simple, fast, and powerful.</p>
+        <div class="hero-cta">
+          <a href="login.html" class="btn-try-workflow">Try workflow</a>
+        </div>
+      </section>
+    </div>
+
+    <section class="llm-input-section" aria-label="LLM prompt input">
+      <div class="llm-tabs" role="tablist">
+        <button type="button" class="llm-tab is-active" role="tab" aria-selected="true" data-tab="image">Image</button>
+        <button type="button" class="llm-tab" role="tab" aria-selected="false" data-tab="video">Video</button>
+        <button type="button" class="llm-tab" role="tab" aria-selected="false" data-tab="workflow">Workflow</button>
+      </div>
+      <div class="llm-input-wrapper">
+        <input type="text" class="llm-input" id="llm-prompt" placeholder="Describe what you want to create..." aria-label="Prompt input">
+        <button type="button" class="llm-random-btn" id="llm-random" aria-label="Generate random prompt">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+            <path d="M5 3v4"/>
+            <path d="M7 5H3"/>
+            <path d="M19 17v4"/>
+            <path d="M21 19h-4"/>
+          </svg>
+        </button>
+        <button type="button" class="llm-icon-btn llm-submit-btn" id="llm-submit" aria-label="Submit">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m5 12 7-7 7 7"/>
+            <path d="M12 19V5"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="templates-section" aria-label="Example templates">
+      <div class="templates-header">
+        <h2 class="templates-title">Try one of these templates</h2>
+        <p class="templates-subtitle">Start fast with popular workflow templates.</p>
+      </div>
+      <div class="templates-grid">
+        <div class="template-card" data-template-title="Restore and colorize an old damaged photo" style="background-image: url('https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=400&h=260&fit=crop');">
+          <div class="template-card-content">
+            <span class="template-bullet"></span>
+            <span>Restore and colorize an old damaged photo</span>
+          </div>
+        </div>
+        <div class="template-card" data-template-title="Swap portrait background to a clean studio scene" style="background-image: url('https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=260&fit=crop');">
+          <div class="template-card-content">
+            <span class="template-bullet"></span>
+            <span>Swap portrait background to a clean studio scene</span>
+          </div>
+        </div>
+        <div class="template-card" data-template-title="Generate hairstyle mockups from my photo" style="background-image: url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400&h=260&fit=crop');">
+          <div class="template-card-content">
+            <span class="template-bullet"></span>
+            <span>Generate hairstyle mockups from my photo</span>
+          </div>
+        </div>
+        <div class="template-card" data-template-title="Create multi-style wedding photo sets" style="background-image: url('https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=260&fit=crop');">
+          <div class="template-card-content">
+            <span class="template-bullet"></span>
+            <span>Create multi-style wedding photo sets</span>
+          </div>
+        </div>
+        <div class="template-card" data-template-title="Predict future baby portraits from parents" style="background-image: url('https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=260&fit=crop');">
+          <div class="template-card-content">
+            <span class="template-bullet"></span>
+            <span>Predict future baby portraits from parents</span>
+          </div>
+        </div>
+        <div class="template-card" data-template-title="Turn my pet photo into artistic portraits" style="background-image: url('https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=260&fit=crop');">
+          <div class="template-card-content">
+            <span class="template-bullet"></span>
+            <span>Turn my pet photo into artistic portraits</span>
+          </div>
+        </div>
+        <div class="template-card" data-template-title="Generate a music album cover and banner kit" style="background-image: url('https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=400&h=260&fit=crop');">
+          <div class="template-card-content">
+            <span class="template-bullet"></span>
+            <span>Generate a music album cover and banner kit</span>
+          </div>
+        </div>
+        <div class="template-card" data-template-title="Create podcast cover art and episode cards" style="background-image: url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400&h=260&fit=crop');">
+          <div class="template-card-content">
+            <span class="template-bullet"></span>
+            <span>Create podcast cover art and episode cards</span>
+          </div>
+        </div>
+        <div class="template-card" data-template-title="Make illustrated tutorial material pages" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=260&fit=crop');">
+          <div class="template-card-content">
+            <span class="template-bullet"></span>
+            <span>Make illustrated tutorial material pages</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="core-features-section" aria-label="Core Features">
+      <div class="core-features-inner">
+        <h2 class="core-features-title">Core Features</h2>
+        <p class="core-features-subtitle">Generate complete industrial-grade workflows with one sentence, easily complete multimedia pipeline operations</p>
+        <div class="core-features-grid">
+          <div class="core-feature-block">
+            <div class="core-feature-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <h3 class="core-feature-title">Ultimate Vibe Flow</h3>
+            <p class="core-feature-desc">Simple-to-use workflow editor with intuitive drag-and-drop interface and visual editing capabilities</p>
+          </div>
+          <div class="core-feature-block">
+            <div class="core-feature-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+              </svg>
+            </div>
+            <h3 class="core-feature-title">Rich Modality Fusion</h3>
+            <p class="core-feature-desc">Seamlessly combine image, video, audio, and text in unified workflows for complex creative tasks</p>
+          </div>
+          <div class="core-feature-block">
+            <div class="core-feature-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <line x1="10" y1="9" x2="8" y2="9"/>
+              </svg>
+            </div>
+            <h3 class="core-feature-title">Advanced Text Understanding</h3>
+            <p class="core-feature-desc">Deep understanding of natural language prompts to generate accurate and contextually relevant outputs</p>
+          </div>
+          <div class="core-feature-block">
+            <div class="core-feature-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <h3 class="core-feature-title">Powerful Concurrent Speed</h3>
+            <p class="core-feature-desc">Fast parallel processing to handle multiple tasks simultaneously for efficient workflow execution</p>
+          </div>
+          <div class="core-feature-block">
+            <div class="core-feature-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <h3 class="core-feature-title">Unlimited Templates</h3>
+            <p class="core-feature-desc">Pre-built templates for common use cases to accelerate your workflow creation and deployment</p>
+          </div>
+          <div class="core-feature-block">
+            <div class="core-feature-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.12-.29-.29-.44-.65-.44-1.13a1.65 1.65 0 0 1 1.67-1.67h2c3.05 0 5.56-2.5 5.56-5.56C21.97 6.01 17.46 2 12 2z"/>
+                <circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"/>
+                <circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"/>
+                <circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"/>
+                <circle cx="6.5" cy="12.5" r="0.5" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3 class="core-feature-title">Multi-Style Support</h3>
+            <p class="core-feature-desc">Support for various output styles and formats to match your creative vision and requirements</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing-section" aria-label="Pricing Plan">
+      <h2 class="pricing-title">Flexible Pricing for Everyone</h2>
+      <p class="pricing-subtitle">Start free. Upgrade anytime. Downgrade anytime. No hidden fees.</p>
+      <div class="pricing-card">
+        <h3 class="pricing-card-title">How It Works</h3>
+        <ul class="pricing-list">
+          <li><strong>Free Plan:</strong> Use without login or create a free account for weekly credits.</li>
+          <li><strong>Paid Plan:</strong> Upgrade to access more credits and advanced features. Pay monthly or yearly.</li>
+          <li>All prices show total cost. No hidden fees. Cancel subscriptions anytime.</li>
+        </ul>
+        <div class="pricing-divider"></div>
+        <a href="#" class="pricing-cta">View all plans and pricing →</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>VoooAI</h3>
+        <p>Powerful AI Image Generator and AI Video Generator, completely free and sensitive to your privacy.</p>
+      </div>
+      <div class="footer-columns">
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="#">Features</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Home Page</a></li>
+            <li><a href="#">Subscription package</a></li>
+            <li><a href="#">Task management</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Help and Support</h4>
+          <ul class="footer-links">
+            <li><a href="#">Help and support</a></li>
+            <li><a href="#">Privacy policy</a></li>
+            <li><a href="#">Service terms</a></li>
+            <li><a href="#">AI Safety Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact us</h4>
+          <p class="footer-email">Email: <a href="mailto:support@voooai.com">support@voooai.com</a></p>
+          <p class="response-time">We typically respond within 48 hours</p>
+          <p class="footer-community">Join Our Community</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="gen-modal-overlay" id="gen-modal" aria-hidden="true">
+    <div class="gen-modal" role="dialog" aria-modal="true" aria-labelledby="gen-modal-title">
+      <div class="gen-modal-header">
+        <h2 class="gen-modal-title" id="gen-modal-title">Generating…</h2>
+        <button type="button" class="gen-modal-close" id="gen-modal-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="gen-prompt-display" id="gen-prompt-display"></div>
+      <div class="gen-preview-wrap is-loading" id="gen-preview-wrap">
+        <div class="gen-loading" id="gen-loading">
+          <div class="gen-loading-spinner"></div>
+          <span class="gen-loading-text" id="gen-loading-text">Creating your image…</span>
+          <div class="gen-loading-progress">
+            <div class="gen-loading-progress-bar" id="gen-progress-bar"></div>
+          </div>
+        </div>
+        <div class="gen-result" id="gen-result">
+          <img id="gen-result-img" alt="Generated result" crossorigin="anonymous">
+        </div>
+      </div>
+      <div id="gen-result-actions" style="display:none;">
+        <div class="gen-modal-section">
+          <button type="button" class="gen-advanced-toggle" id="gen-advanced-toggle" aria-expanded="false" aria-controls="gen-advanced-content">
+            <span>Advanced settings</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="gen-advanced-content" id="gen-advanced-content">
+            <!-- populated by JS per tab -->
+          </div>
+        </div>
+        <div class="gen-modal-section">
+          <h3 class="gen-section-title">Export</h3>
+          <div class="gen-export-row">
+            <button type="button" class="gen-export-btn" id="gen-export-png">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              PNG
+            </button>
+            <button type="button" class="gen-export-btn" id="gen-export-jpg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              JPG
+            </button>
+            <button type="button" class="gen-export-btn" id="gen-export-webp">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              WebP
+            </button>
+          </div>
+        </div>
+        <div class="gen-modal-footer">
+          <a href="workflow.html" class="gen-try-workflow" id="gen-try-workflow">Try Workflow →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var PROMPTS = {
+        image: [
+          'A serene Japanese garden at golden hour, photorealistic, soft bokeh background',
+          'Minimalist logo of a fox made from geometric shapes, flat design, navy and orange',
+          'Watercolor portrait of an elderly woman laughing, loose brushstrokes, warm tones',
+          'A smiling woman drinking coffee in a café, natural light',
+          'A golden retriever puppy sitting in a flower meadow',
+          'A rainy Tokyo street at night, neon reflections on wet pavement'
+        ],
+        video: [
+          'A timelapse of storm clouds rolling over a mountain range, cinematic, 4K',
+          'Slow-motion close-up of a coffee drop splashing into a white cup, studio lighting',
+          'Drone flyover of a neon-lit city at night, smooth motion, cyberpunk aesthetic',
+          'A woman walking slowly through a rainy street, umbrella, cinematic slow motion',
+          'A golden retriever running on a beach, waves crashing, slow motion',
+          'A busy Tokyo intersection at night, neon lights, fast-moving crowd timelapse'
+        ],
+        workflow: [
+          'Lo-fi hip-hop track with rain sounds, mellow piano, 90 BPM, 2-minute loop',
+          'Podcast intro jingle, upbeat and techy, 15 seconds, no vocals',
+          '3D animated logo reveal, metallic finish, particle burst effect, 5-second loop'
+        ]
+      };
+
+      var placeholders = {
+        image: 'Describe an image you want to create...',
+        video: 'Describe a video you want to generate...',
+        workflow: 'Describe media or other content you want...'
+      };
+
+      var IMAGE_OPTIONS = {
+        engines: ['DALL-E 3', 'Midjourney', 'Stable Diffusion', 'Adobe Firefly', 'Nano Banana'],
+        aspectRatios: ['1:1', '16:9', '9:16', '4:3', '3:4'],
+        styles: ['Photorealistic', 'Illustration', 'Artistic', 'Minimalist', 'Cinematic']
+      };
+
+      var VIDEO_OPTIONS = {
+        engines: ['Sora', 'Runway', 'Pika', 'Luma Dream Machine'],
+        durations: ['5 seconds', '10 seconds', '15 seconds', '30 seconds'],
+        aspectRatios: ['16:9', '9:16', '1:1', '4:3']
+      };
+
+      var activeTab = 'image';
+      var tabs = document.querySelectorAll('.llm-tab');
+      var input = document.getElementById('llm-prompt');
+      var randomBtn = document.getElementById('llm-random');
+      var submitBtn = document.getElementById('llm-submit');
+
+      // ── Gen modal elements ──
+      var genModal = document.getElementById('gen-modal');
+      var genModalClose = document.getElementById('gen-modal-close');
+      var genModalTitle = document.getElementById('gen-modal-title');
+      var genPromptDisplay = document.getElementById('gen-prompt-display');
+      var genPreviewWrap = document.getElementById('gen-preview-wrap');
+      var genLoadingText = document.getElementById('gen-loading-text');
+      var genProgressBar = document.getElementById('gen-progress-bar');
+      var genResultImg = document.getElementById('gen-result-img');
+      var genResultActions = document.getElementById('gen-result-actions');
+      var genAdvancedToggle = document.getElementById('gen-advanced-toggle');
+      var genAdvancedContent = document.getElementById('gen-advanced-content');
+      var genTryWorkflow = document.getElementById('gen-try-workflow');
+
+      function setActiveTab(tab) {
+        activeTab = tab;
+        tabs.forEach(function (t) {
+          var isActive = t.getAttribute('data-tab') === tab;
+          t.classList.toggle('is-active', isActive);
+          t.setAttribute('aria-selected', isActive);
+        });
+        input.placeholder = placeholders[tab];
+        input.value = '';
+      }
+
+      function pickRandomPrompt() {
+        var list = PROMPTS[activeTab];
+        if (!list || list.length === 0) return;
+        input.value = list[Math.floor(Math.random() * list.length)];
+        input.focus();
+      }
+
+      // ── Advanced settings HTML builders ──
+      function buildAdvancedHtml() {
+        if (activeTab === 'image') {
+          var engines = IMAGE_OPTIONS.engines.map(function (e) { return '<option>' + e + '</option>'; }).join('');
+          var ratios  = IMAGE_OPTIONS.aspectRatios.map(function (r) { return '<option>' + r + '</option>'; }).join('');
+          var styles  = IMAGE_OPTIONS.styles.map(function (s) { return '<option>' + s + '</option>'; }).join('');
+          return '<div class="gen-advanced-row">' +
+            '<div class="gen-advanced-field"><label>Engine</label><select id="adv-engine">' + engines + '</select></div>' +
+            '<div class="gen-advanced-field"><label>Aspect ratio</label><select id="adv-aspect">' + ratios + '</select></div>' +
+            '</div>' +
+            '<div class="gen-advanced-row">' +
+            '<div class="gen-advanced-field"><label>Style</label><select id="adv-style">' + styles + '</select></div>' +
+            '</div>';
+        } else {
+          var engines = VIDEO_OPTIONS.engines.map(function (e) { return '<option>' + e + '</option>'; }).join('');
+          var durations = VIDEO_OPTIONS.durations.map(function (d) { return '<option>' + d + '</option>'; }).join('');
+          var ratios  = VIDEO_OPTIONS.aspectRatios.map(function (r) { return '<option>' + r + '</option>'; }).join('');
+          return '<div class="gen-advanced-row">' +
+            '<div class="gen-advanced-field"><label>Engine</label><select id="adv-engine">' + engines + '</select></div>' +
+            '<div class="gen-advanced-field"><label>Duration</label><select id="adv-duration">' + durations + '</select></div>' +
+            '</div>' +
+            '<div class="gen-advanced-row">' +
+            '<div class="gen-advanced-field"><label>Aspect ratio</label><select id="adv-aspect">' + ratios + '</select></div>' +
+            '</div>';
+        }
+      }
+
+      // ── Open generation modal ──
+      function openGenModal(prompt) {
+        var isVideo = activeTab === 'video';
+        genModalTitle.textContent = isVideo ? 'Generating video…' : 'Generating image…';
+        genLoadingText.textContent = isVideo ? 'Creating your video…' : 'Creating your image…';
+        genPromptDisplay.textContent = prompt;
+
+        // Reset state
+        genPreviewWrap.classList.add('is-loading');
+        genResultActions.style.display = 'none';
+        genAdvancedContent.classList.remove('is-open');
+        genAdvancedToggle.setAttribute('aria-expanded', 'false');
+        genAdvancedContent.innerHTML = buildAdvancedHtml();
+        genResultImg.src = '';
+        genProgressBar.style.width = '0%';
+
+        // Open overlay
+        genModal.classList.add('is-open');
+        genModal.setAttribute('aria-hidden', 'false');
+
+        // Simulate progress
+        var progress = 0;
+        var progressInterval = setInterval(function () {
+          progress += 8 + Math.random() * 12;
+          if (progress >= 95) progress = 95;
+          genProgressBar.style.width = progress + '%';
+        }, 200);
+
+        // Load placeholder image (picsum seeded by prompt hash)
+        var seed = Math.abs((prompt + Date.now()).split('').reduce(function (a, c) {
+          return ((a << 5) - a) + c.charCodeAt(0);
+        }, 0));
+        var imgUrl = 'https://picsum.photos/seed/' + seed + '/512/512';
+
+        genResultImg.onload = function () {
+          clearInterval(progressInterval);
+          genProgressBar.style.width = '100%';
+          setTimeout(function () {
+            genPreviewWrap.classList.remove('is-loading');
+            genResultActions.style.display = 'block';
+            genModalTitle.textContent = isVideo ? 'Video ready' : 'Image ready';
+          }, 300);
+        };
+        genResultImg.onerror = function () {
+          clearInterval(progressInterval);
+          genProgressBar.style.width = '100%';
+          genResultImg.src = 'https://picsum.photos/512/512?t=' + Date.now();
+        };
+        setTimeout(function () { genResultImg.src = imgUrl; }, 400);
+
+        // Update Try Workflow link
+        var params = 'prompt=' + encodeURIComponent(prompt) + '&type=' + activeTab;
+        if (genTryWorkflow) genTryWorkflow.href = 'workflow.html?' + params;
+      }
+
+      function closeGenModal() {
+        genModal.classList.remove('is-open');
+        genModal.setAttribute('aria-hidden', 'true');
+      }
+
+      function onSubmit() {
+        var prompt = (input.value || '').trim();
+        if (activeTab === 'workflow') {
+          window.location.href = 'workflow.html' + (prompt ? '?prompt=' + encodeURIComponent(prompt) : '');
+          return;
+        }
+        if (!prompt) { input.focus(); return; }
+        openGenModal(prompt);
+      }
+
+      // ── Export helpers ──
+      function exportImage(format) {
+        var img = genResultImg;
+        if (!img || !img.src) return;
+        var ext = format === 'jpeg' ? 'jpg' : format;
+        fetch(img.src, { mode: 'cors' })
+          .then(function (r) { return r.blob(); })
+          .then(function (blob) {
+            var tmpImg = new Image();
+            tmpImg.crossOrigin = 'anonymous';
+            tmpImg.onload = function () {
+              var canvas = document.createElement('canvas');
+              canvas.width = tmpImg.naturalWidth;
+              canvas.height = tmpImg.naturalHeight;
+              canvas.getContext('2d').drawImage(tmpImg, 0, 0);
+              URL.revokeObjectURL(tmpImg.src);
+              var mime = 'image/' + (format === 'jpeg' ? 'jpeg' : format === 'webp' ? 'webp' : 'png');
+              canvas.toBlob(function (outBlob) {
+                var url = URL.createObjectURL(outBlob);
+                var a = document.createElement('a');
+                a.href = url; a.download = 'voooai-generated.' + ext; a.click();
+                URL.revokeObjectURL(url);
+              }, mime, format === 'jpeg' ? 0.92 : 1);
+            };
+            tmpImg.src = URL.createObjectURL(blob);
+          })
+          .catch(function () {
+            var a = document.createElement('a');
+            a.href = img.src; a.download = 'voooai-generated.' + ext; a.target = '_blank'; a.click();
+          });
+      }
+
+      // ── Wire up events ──
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () { setActiveTab(this.getAttribute('data-tab')); });
+      });
+
+      if (randomBtn) randomBtn.addEventListener('click', pickRandomPrompt);
+      if (submitBtn) submitBtn.addEventListener('click', onSubmit);
+      input.addEventListener('keydown', function (e) { if (e.key === 'Enter') onSubmit(); });
+
+      if (genModalClose) genModalClose.addEventListener('click', closeGenModal);
+      if (genModal) genModal.addEventListener('click', function (e) { if (e.target === genModal) closeGenModal(); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && genModal.classList.contains('is-open')) closeGenModal();
+      });
+
+      if (genAdvancedToggle) {
+        genAdvancedToggle.addEventListener('click', function () {
+          var open = genAdvancedContent.classList.toggle('is-open');
+          genAdvancedToggle.setAttribute('aria-expanded', open);
+        });
+      }
+
+      var exportPng  = document.getElementById('gen-export-png');
+      var exportJpg  = document.getElementById('gen-export-jpg');
+      var exportWebp = document.getElementById('gen-export-webp');
+      if (exportPng)  exportPng.addEventListener('click',  function () { exportImage('png'); });
+      if (exportJpg)  exportJpg.addEventListener('click',  function () { exportImage('jpeg'); });
+      if (exportWebp) exportWebp.addEventListener('click', function () { exportImage('webp'); });
+
+      setActiveTab('image');
+
+      // Template cards navigate to workflow with prompt pre-filled
+      document.querySelectorAll('.template-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+          var title = this.getAttribute('data-template-title') || '';
+          if (title) {
+            window.location.href = 'workflow.html?prompt=' + encodeURIComponent(title);
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

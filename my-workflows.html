@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Workflows — VoooAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #060611;
+      --bg-surface: #10101b;
+      --accent-cyan: #00d4aa;
+      --accent-magenta: #e040fb;
+      --text-primary: #f5f5fb;
+      --text-muted: #8b8ba3;
+      --border-subtle: rgba(255,255,255,0.06);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      background-color: #000;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .logo:hover { opacity: 0.9; }
+    .logo-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon svg { width: 100%; height: 100%; }
+    .logo-text { font-weight: 600; font-size: 1.1rem; }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .header-title { font-size: 1rem; color: var(--text-muted); }
+    .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .header-actions .profile-wrap,
+    .header-actions .settings-wrap { position: relative; }
+    .header-actions .profile-menu,
+    .header-actions .settings-menu { right: 0; left: auto; }
+    .profile-menu .add-dropdown-section:first-of-type {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 0.2rem;
+      padding-top: 0.2rem;
+    }
+    .header-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .header-btn:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    .header-btn svg { width: 20px; height: 20px; }
+    .header-btn.profile {
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      color: #020208;
+      border: none;
+    }
+    .header-btn.profile:hover { filter: brightness(1.08); }
+    .add-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 3px;
+      min-width: 170px;
+      background: rgba(16,16,27,0.98);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+      padding: 0.25rem 0;
+      z-index: 100;
+      display: none;
+    }
+    .add-dropdown-menu.is-open { display: block; }
+    .add-dropdown-section { padding: 0.2rem 0; }
+    .add-dropdown-section:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .add-dropdown-label {
+      padding: 0.25rem 0.6rem 0.15rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .add-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      width: 100%;
+      padding: 0.35rem 0.6rem;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .add-dropdown-item:hover { background: rgba(255,255,255,0.06); }
+    .add-dropdown-item svg { width: 14px; height: 14px; color: var(--text-muted); flex-shrink: 0; }
+    .btn-new {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      color: #020208;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-new:hover { filter: brightness(1.05); }
+    main {
+      flex: 1;
+      padding: 2rem 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .workflows-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .workflow-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .workflow-row:hover {
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(16,16,27,0.9);
+    }
+    .workflow-row .workflow-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .workflow-name {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .workflow-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .workflow-actions {
+      display: flex;
+      gap: 0.25rem;
+      flex-shrink: 0;
+      align-items: center;
+    }
+    .workflow-row .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: transparent;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .workflow-row .icon-btn:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    .workflow-row .icon-btn.edit {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      color: #020208;
+      border: none;
+    }
+    .workflow-row .icon-btn.edit:hover { filter: brightness(1.05); }
+    .workflow-row .icon-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    .workflow-row .overflow-wrap {
+      position: relative;
+    }
+    .workflow-row .row-overflow-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      min-width: 140px;
+      background: rgba(16,16,27,0.98);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+      padding: 0.25rem 0;
+      z-index: 50;
+      display: none;
+    }
+    .workflow-row .row-overflow-menu.is-open { display: block; }
+    .workflow-row .row-overflow-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      width: 100%;
+      padding: 0.4rem 0.75rem;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .workflow-row .row-overflow-item:hover { background: rgba(255,255,255,0.06); }
+    .workflow-row .row-overflow-item.delete:hover { color: #f43f5e; }
+    .workflow-row .row-overflow-item svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .workflow-row .icon-btn.favorite { color: var(--text-muted); }
+    .workflow-row .icon-btn.favorite.is-favorite { color: #f43f5e; }
+    .workflow-row .icon-btn.favorite svg { width: 16px; height: 16px; }
+    .workflow-row .icon-btn.use-btn {
+      padding: 0.35rem 0.85rem;
+      font-size: 0.8rem;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      color: #020208;
+      border: none;
+    }
+    .workflow-row .icon-btn.use-btn:hover { filter: brightness(1.05); }
+    .empty-state {
+      text-align: center;
+      padding: 2rem 2rem;
+      color: var(--text-muted);
+    }
+    .empty-state p { margin-bottom: 0.5rem; font-size: 1rem; }
+    .search-bar {
+      display: flex;
+      align-items: stretch;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      background: var(--bg-surface);
+    }
+    .search-bar:focus-within {
+      border-color: rgba(0,212,170,0.5);
+    }
+    .search-bar-input-wrap {
+      flex: 1;
+      position: relative;
+      min-width: 0;
+      border-radius: 8px 0 0 8px;
+    }
+    .search-bar-input-wrap svg {
+      position: absolute;
+      left: 0.65rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .search-bar-input {
+      width: 100%;
+      padding: 0.4rem 0.65rem 0.4rem 2rem;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+    }
+    .search-bar-input::placeholder {
+      color: var(--text-muted);
+    }
+    .search-bar-input:focus {
+      outline: none;
+    }
+    .search-bar-filters-wrap {
+      position: relative;
+      border-left: 1px solid var(--border-subtle);
+      border-radius: 0 8px 8px 0;
+    }
+    .search-bar-filters-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s;
+    }
+    .search-bar-filters-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.04);
+    }
+    .search-bar-filters-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+    .search-bar-filters-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      min-width: 200px;
+      background: rgba(16,16,27,0.98);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+      padding: 0.5rem 0;
+      z-index: 200;
+      display: none;
+    }
+    .search-bar-filters-menu.is-open { display: block; }
+    .search-bar-filters-menu .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.35rem 0.75rem;
+    }
+    .search-bar-filters-menu .filter-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .search-bar-filters-menu .facet-select {
+      flex: 1;
+      min-width: 0;
+      padding: 0.3rem 1.5rem 0.3rem 0.5rem;
+      font-size: 0.75rem;
+      background-color: rgba(0,0,0,0.3);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%238b8ba3' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.4rem center;
+    }
+    .search-no-results {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+    .filter-chip {
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .filter-chip:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+    }
+    .filter-chip.is-active {
+      background: var(--accent-cyan);
+      color: #020208;
+      border-color: var(--accent-cyan);
+    }
+    .filter-chip.is-active:hover {
+      filter: brightness(1.05);
+    }
+    .search-section {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logo-v-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00d4aa"/>
+                <stop offset="100%" style="stop-color:#e040fb"/>
+              </linearGradient>
+              <filter id="logo-glow">
+                <feGaussianBlur stdDeviation="0.5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <circle cx="16" cy="16" r="14" fill="none" stroke="url(#logo-v-gradient)" stroke-width="1.2" filter="url(#logo-glow)"/>
+            <circle cx="16" cy="16" r="10" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+            <circle cx="16" cy="16" r="6" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="0.8"/>
+            <path d="M10 10 L16 22 L22 10" fill="none" stroke="url(#logo-v-gradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#logo-glow)"/>
+          </svg>
+        </div>
+        <div class="logo-text">VoooAI</div>
+      </a>
+      <span class="header-title">My Workflows</span>
+    </div>
+    <div class="header-actions">
+      <a href="workflow.html" class="btn-new">+ New workflow</a>
+      <div class="settings-wrap">
+        <button type="button" class="header-btn" id="settings-btn" aria-label="Settings" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <div class="add-dropdown-menu settings-menu" id="settings-menu" role="menu">
+          <div class="add-dropdown-section">
+            <div class="add-dropdown-label">Preferences</div>
+            <button type="button" class="add-dropdown-item" id="settings-language-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Language
+            </button>
+            <button type="button" class="add-dropdown-item" id="settings-theme-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>
+              Theme
+            </button>
+            <button type="button" class="add-dropdown-item" id="settings-notifications-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Notifications
+            </button>
+          </div>
+          <div class="add-dropdown-section">
+            <div class="add-dropdown-label">Editor</div>
+            <button type="button" class="add-dropdown-item" id="settings-shortcuts-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01"/><path d="M10 8h.01"/><path d="M14 8h.01"/></svg>
+              Keyboard shortcuts
+            </button>
+            <button type="button" class="add-dropdown-item" id="settings-autosave-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Auto-save
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="profile-wrap">
+        <button type="button" class="header-btn profile" id="profile-btn" aria-label="Profile" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <div class="add-dropdown-menu profile-menu" id="profile-menu" role="menu">
+          <button type="button" class="add-dropdown-item" id="profile-account-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Account settings
+          </button>
+          <button type="button" class="add-dropdown-item" id="profile-subscription-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Manage subscription
+          </button>
+          <div class="add-dropdown-section">
+            <button type="button" class="add-dropdown-item" id="profile-logout-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Log out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="search-section">
+    <div class="search-bar">
+      <div class="search-bar-input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" class="search-bar-input" id="search-field" placeholder="Search workflows..." aria-label="Search workflows">
+      </div>
+      <div class="search-bar-filters-wrap">
+        <button type="button" class="search-bar-filters-btn" id="filters-btn" aria-label="Filters" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filters
+        </button>
+        <div class="search-bar-filters-menu" id="filters-menu" role="menu">
+          <div class="filter-row">
+            <span class="filter-label">Sort</span>
+            <select class="facet-select" id="sort-facet" aria-label="Sort by">
+              <option value="recent">Most recent</option>
+              <option value="oldest">Least recent</option>
+              <option value="name-az">Name A–Z</option>
+              <option value="name-za">Name Z–A</option>
+              <option value="nodes-desc">Most nodes</option>
+              <option value="nodes-asc">Fewest nodes</option>
+            </select>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label">Nodes</span>
+            <select class="facet-select" id="nodes-facet" aria-label="Filter by node count">
+              <option value="all">All sizes</option>
+              <option value="1-3">1–3</option>
+              <option value="4-7">4–7</option>
+              <option value="8+">8+</option>
+            </select>
+          </div>
+          <div class="filter-row">
+            <span class="filter-label">Date</span>
+            <select class="facet-select" id="date-facet" aria-label="Filter by date">
+              <option value="all">Any time</option>
+              <option value="today">Today</option>
+              <option value="week">This week</option>
+              <option value="month">This month</option>
+              <option value="older">Older</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="filter-chips">
+      <button type="button" class="filter-chip is-active" data-chip="my">My</button>
+      <button type="button" class="filter-chip" data-chip="favorites">Favorites</button>
+      <button type="button" class="filter-chip" data-chip="templates">Templates</button>
+      <button type="button" class="filter-chip" data-chip="community">Community</button>
+    </div>
+    </div>
+    <div class="workflows-list" id="workflows-list"></div>
+    <div class="search-no-results" id="search-no-results" style="display:none">
+      No workflows match your search. Try different filters or clear the search.
+    </div>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <p>No saved workflows yet</p>
+      <p style="font-size:0.9rem;opacity:0.8">Create your first workflow using the button above</p>
+    </div>
+  </main>
+  <script>
+    var STORAGE_KEY = 'voooai-workflows';
+    var FAVORITES_KEY = 'voooai-favorite-ids';
+    var activeChip = 'my';
+
+    var TEMPLATES = [
+      { id: 'tpl-1', name: 'Product launch campaign', desc: 'Generate images, captions, and video script', state: { nodes: [{ id: 'n1', type: 'File input', x: 80, y: 100, content: '' }, { id: 'n2', type: 'Image — DALL-E 3', x: 320, y: 80, content: '' }, { id: 'n3', type: 'Bot — GPT-4', x: 320, y: 180, content: 'Write social captions' }], links: [] } },
+      { id: 'tpl-2', name: 'Social media carousel', desc: '3 product shots with captions', state: { nodes: [{ id: 'n1', type: 'File input', x: 80, y: 120, content: '' }, { id: 'n2', type: 'Image — Midjourney', x: 300, y: 120, content: '' }, { id: 'n3', type: 'Prompt input', x: 80, y: 220, content: 'Style and mood' }], links: [] } },
+      { id: 'tpl-3', name: 'Video from script', desc: 'Script to voiceover to video', state: { nodes: [{ id: 'n1', type: 'Prompt input', x: 80, y: 100, content: 'Enter your script...' }, { id: 'n2', type: 'Audio — ElevenLabs', x: 320, y: 80, content: '' }, { id: 'n3', type: 'Video — Runway', x: 560, y: 120, content: '' }], links: [] } },
+      { id: 'tpl-4', name: 'Brand mood board', desc: '4 images from concept + captions', state: { nodes: [{ id: 'n1', type: 'Prompt input', x: 80, y: 120, content: 'Describe your brand concept...' }, { id: 'n2', type: 'Image — DALL-E 3', x: 320, y: 120, content: '' }, { id: 'n3', type: 'Bot — Claude', x: 560, y: 120, content: 'Write captions for each image' }], links: [] } },
+      { id: 'tpl-5', name: 'Podcast intro', desc: 'Music bed + voiceover script', state: { nodes: [{ id: 'n1', type: 'Prompt input', x: 80, y: 100, content: 'Describe the podcast style...' }, { id: 'n2', type: 'Audio — Suno', x: 320, y: 80, content: '' }, { id: 'n3', type: 'Bot — GPT-4', x: 320, y: 180, content: 'Write intro script' }], links: [] } }
+    ];
+
+    var COMMUNITY = [
+      { id: 'comm-1', name: 'Anime storybook', author: 'Creator123', uses: 234, state: { nodes: [{ id: 'n1', type: 'Prompt input', x: 80, y: 120, content: '' }, { id: 'n2', type: 'Image — DALL-E 3', x: 320, y: 120, content: 'Anime style' }], links: [] } },
+      { id: 'comm-2', name: 'Real estate staging', author: 'DesignPro', uses: 189, state: { nodes: [{ id: 'n1', type: 'File input', x: 80, y: 120, content: '' }, { id: 'n2', type: 'Image — Midjourney', x: 320, y: 120, content: 'Modern furniture staging' }], links: [] } },
+      { id: 'comm-3', name: 'LinkedIn video ad', author: 'MarketerAI', uses: 412, state: { nodes: [{ id: 'n1', type: 'Prompt input', x: 80, y: 100, content: '' }, { id: 'n2', type: 'Audio — ElevenLabs', x: 320, y: 80, content: '' }, { id: 'n3', type: 'Video — Runway', x: 560, y: 120, content: '' }], links: [] } }
+    ];
+
+    function getFavoriteIds() {
+      try {
+        var raw = localStorage.getItem(FAVORITES_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) { return []; }
+    }
+    function setFavoriteIds(ids) {
+      try {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
+      } catch (e) {}
+    }
+    function toggleFavorite(id) {
+      var ids = getFavoriteIds();
+      var i = ids.indexOf(id);
+      if (i >= 0) ids.splice(i, 1);
+      else ids.push(id);
+      setFavoriteIds(ids);
+    }
+    function isFavorite(id) {
+      return getFavoriteIds().indexOf(id) >= 0;
+    }
+
+    function getWorkflows() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) { return []; }
+    }
+    function saveWorkflows(list) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      } catch (e) {}
+    }
+    function deleteWorkflow(id) {
+      if (!confirm('Delete this workflow?')) return;
+      var list = getWorkflows().filter(function (w) { return w.id !== id; });
+      saveWorkflows(list);
+      render();
+    }
+    function formatDate(iso) {
+      if (!iso) return '';
+      var d = new Date(iso);
+      var now = new Date();
+      var diff = now - d;
+      if (diff < 60000) return 'Just now';
+      if (diff < 3600000) return Math.floor(diff / 60000) + ' min ago';
+      if (diff < 86400000) return Math.floor(diff / 3600000) + ' hours ago';
+      return d.toLocaleDateString();
+    }
+    function getNodeCount(w) {
+      return (w.state && w.state.nodes) ? w.state.nodes.length : 0;
+    }
+    function filterAndSortWorkflows(list, opts) {
+      opts = opts || {};
+      var searchEl = document.getElementById('search-field');
+      var sortEl = document.getElementById('sort-facet');
+      var nodesEl = document.getElementById('nodes-facet');
+      var dateEl = document.getElementById('date-facet');
+      var query = (searchEl && searchEl.value) ? searchEl.value.trim().toLowerCase() : '';
+      var sortVal = (sortEl && sortEl.value) || 'recent';
+      var nodesVal = (nodesEl && nodesEl.value) || 'all';
+      var dateVal = (dateEl && dateEl.value) || 'all';
+      var useFacets = opts.useFacets !== false;
+
+      var filtered = list.filter(function (w) {
+        var name = (w.name || 'Untitled workflow').toLowerCase();
+        var searchable = name + (w.desc || '') + (w.author || '');
+        if (query && searchable.indexOf(query) < 0) return false;
+        if (!useFacets) return true;
+        var nodes = getNodeCount(w);
+        if (nodesVal === '1-3' && (nodes < 1 || nodes > 3)) return false;
+        if (nodesVal === '4-7' && (nodes < 4 || nodes > 7)) return false;
+        if (nodesVal === '8+' && nodes < 8) return false;
+        var savedAt = w.savedAt ? new Date(w.savedAt) : null;
+        if (dateVal !== 'all' && savedAt) {
+          var now = new Date();
+          var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          var weekStart = new Date(todayStart);
+          weekStart.setDate(weekStart.getDate() - 7);
+          var monthStart = new Date(todayStart);
+          monthStart.setMonth(monthStart.getMonth() - 1);
+          if (dateVal === 'today' && savedAt < todayStart) return false;
+          if (dateVal === 'week' && savedAt < weekStart) return false;
+          if (dateVal === 'month' && savedAt < monthStart) return false;
+          if (dateVal === 'older' && savedAt >= monthStart) return false;
+        }
+        return true;
+      });
+
+      if (useFacets) {
+        filtered.sort(function (a, b) {
+          var na = (a.name || 'Untitled workflow').toLowerCase();
+          var nb = (b.name || 'Untitled workflow').toLowerCase();
+          if (sortVal === 'recent') return new Date(b.savedAt || 0) - new Date(a.savedAt || 0);
+          if (sortVal === 'oldest') return new Date(a.savedAt || 0) - new Date(b.savedAt || 0);
+          if (sortVal === 'name-az') return na.localeCompare(nb);
+          if (sortVal === 'name-za') return nb.localeCompare(na);
+          if (sortVal === 'nodes-desc') return getNodeCount(b) - getNodeCount(a);
+          if (sortVal === 'nodes-asc') return getNodeCount(a) - getNodeCount(b);
+          return 0;
+        });
+      }
+      return filtered;
+    }
+    function useTemplate(tpl) {
+      var list = getWorkflows();
+      var id = 'wf-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+      var w = { id: id, name: tpl.name, state: JSON.parse(JSON.stringify(tpl.state)), savedAt: new Date().toISOString() };
+      list.unshift(w);
+      saveWorkflows(list);
+      activeChip = 'my';
+      document.querySelectorAll('.filter-chip').forEach(function (c) {
+        c.classList.toggle('is-active', c.getAttribute('data-chip') === 'my');
+      });
+      render();
+      window.location.href = 'workflow.html?id=' + encodeURIComponent(id);
+    }
+    function render() {
+      var container = document.getElementById('workflows-list');
+      var empty = document.getElementById('empty-state');
+      var noResults = document.getElementById('search-no-results');
+      var searchSection = document.querySelector('.search-section');
+      var filtersWrap = document.querySelector('.search-bar-filters-wrap');
+      container.innerHTML = '';
+
+      var list, useFacets, isTemplate, isCommunity;
+      if (activeChip === 'my') {
+        list = getWorkflows();
+        useFacets = true;
+        isTemplate = false;
+        isCommunity = false;
+      } else if (activeChip === 'favorites') {
+        list = getWorkflows().filter(function (w) { return isFavorite(w.id); });
+        useFacets = true;
+        isTemplate = false;
+        isCommunity = false;
+      } else if (activeChip === 'templates') {
+        list = TEMPLATES.slice();
+        useFacets = false;
+        isTemplate = true;
+        isCommunity = false;
+      } else {
+        list = COMMUNITY.slice();
+        useFacets = false;
+        isTemplate = false;
+        isCommunity = true;
+      }
+
+      var filtered = filterAndSortWorkflows(list, { useFacets: useFacets });
+      if (filtersWrap) filtersWrap.style.display = useFacets ? '' : 'none';
+
+      if (activeChip === 'my' && list.length === 0) {
+        empty.style.display = 'block';
+        empty.innerHTML = '<p>No saved workflows yet</p><p style="font-size:0.9rem;opacity:0.8">Create your first workflow using the button above</p>';
+        if (noResults) noResults.style.display = 'none';
+      } else if (activeChip === 'favorites' && list.length === 0) {
+        empty.style.display = 'block';
+        empty.innerHTML = '<p>No favorites yet</p><p style="font-size:0.9rem;opacity:0.8">Star workflows from My to add them here</p>';
+        if (noResults) noResults.style.display = 'none';
+      } else if (filtered.length === 0) {
+        empty.style.display = 'none';
+        if (noResults) noResults.style.display = 'block';
+      } else {
+        empty.style.display = 'none';
+        if (noResults) noResults.style.display = 'none';
+        filtered.forEach(function (w) {
+          var row = document.createElement('div');
+          row.className = 'workflow-row';
+          var meta = isCommunity ? ((w.author || '') + ' · ' + (w.uses || 0) + ' uses') : (w.desc || formatDate(w.savedAt) + ' · ' + getNodeCount(w) + ' nodes');
+          if (isTemplate || isCommunity) {
+            row.innerHTML =
+              '<div class="workflow-info">' +
+                '<div class="workflow-name">' + (w.name || 'Untitled').replace(/</g, '&lt;') + '</div>' +
+                '<div class="workflow-meta">' + (meta || '').replace(/</g, '&lt;') + '</div>' +
+              '</div>' +
+              '<div class="workflow-actions">' +
+                '<button type="button" class="icon-btn use-btn use-template" aria-label="Use">Use</button>' +
+              '</div>';
+            row.querySelector('.use-template').addEventListener('click', function () {
+              useTemplate(w);
+            });
+          } else {
+            var favClass = isFavorite(w.id) ? ' is-favorite' : '';
+            row.innerHTML =
+              '<div class="workflow-info">' +
+                '<div class="workflow-name">' + (w.name || 'Untitled workflow').replace(/</g, '&lt;') + '</div>' +
+                '<div class="workflow-meta">' + meta + '</div>' +
+              '</div>' +
+              '<div class="workflow-actions">' +
+                '<button type="button" class="icon-btn favorite' + favClass + '" data-id="' + w.id + '" aria-label="' + (isFavorite(w.id) ? 'Unfavorite' : 'Favorite') + '">' +
+                  '<svg viewBox="0 0 24 24" fill="' + (isFavorite(w.id) ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+                '</button>' +
+                '<button type="button" class="icon-btn edit" data-id="' + w.id + '" aria-label="Edit workflow">' +
+                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' +
+                '</button>' +
+                '<div class="overflow-wrap">' +
+                  '<button type="button" class="icon-btn overflow" aria-label="More actions" aria-haspopup="true">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>' +
+                  '</button>' +
+                  '<div class="row-overflow-menu" role="menu">' +
+                    '<button type="button" class="row-overflow-item delete" data-id="' + w.id + '">' +
+                      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>' +
+                      'Delete' +
+                    '</button>' +
+                  '</div>' +
+                '</div>' +
+              '</div>';
+            row.querySelector('.icon-btn.edit').addEventListener('click', function () {
+              window.location.href = 'workflow.html?id=' + encodeURIComponent(w.id);
+            });
+            row.querySelector('.icon-btn.favorite').addEventListener('click', function () {
+              toggleFavorite(w.id);
+              render();
+            });
+            var overflowBtn = row.querySelector('.icon-btn.overflow');
+            var overflowMenu = row.querySelector('.row-overflow-menu');
+            overflowBtn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              document.querySelectorAll('.row-overflow-menu.is-open').forEach(function (m) {
+                if (m !== overflowMenu) m.classList.remove('is-open');
+              });
+              overflowMenu.classList.toggle('is-open');
+            });
+            overflowMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+            row.querySelector('.row-overflow-item.delete').addEventListener('click', function () {
+              overflowMenu.classList.remove('is-open');
+              deleteWorkflow(w.id);
+            });
+          }
+          container.appendChild(row);
+        });
+      }
+    }
+
+    var searchField = document.getElementById('search-field');
+    var filtersBtn = document.getElementById('filters-btn');
+    var filtersMenu = document.getElementById('filters-menu');
+    var sortFacet = document.getElementById('sort-facet');
+    var nodesFacet = document.getElementById('nodes-facet');
+    var dateFacet = document.getElementById('date-facet');
+    if (searchField) searchField.addEventListener('input', render);
+    if (sortFacet) sortFacet.addEventListener('change', render);
+    if (nodesFacet) nodesFacet.addEventListener('change', render);
+    if (dateFacet) dateFacet.addEventListener('change', render);
+    if (filtersBtn && filtersMenu) {
+      filtersBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        filtersMenu.classList.toggle('is-open');
+        filtersBtn.setAttribute('aria-expanded', filtersMenu.classList.contains('is-open'));
+      });
+      filtersMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+    }
+    document.querySelectorAll('.filter-chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        document.querySelectorAll('.filter-chip').forEach(function (c) { c.classList.remove('is-active'); });
+        chip.classList.add('is-active');
+        activeChip = chip.getAttribute('data-chip');
+        render();
+      });
+    });
+
+    var settingsBtn = document.getElementById('settings-btn');
+    var settingsMenu = document.getElementById('settings-menu');
+    var profileBtn = document.getElementById('profile-btn');
+    var profileMenu = document.getElementById('profile-menu');
+    if (settingsBtn && settingsMenu) {
+      settingsBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        profileMenu.classList.remove('is-open');
+        settingsMenu.classList.toggle('is-open');
+        settingsBtn.setAttribute('aria-expanded', settingsMenu.classList.contains('is-open'));
+      });
+      settingsMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+    }
+    if (profileBtn && profileMenu) {
+      profileBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        settingsMenu.classList.remove('is-open');
+        profileMenu.classList.toggle('is-open');
+        profileBtn.setAttribute('aria-expanded', profileMenu.classList.contains('is-open'));
+      });
+      profileMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+    }
+    document.addEventListener('click', function () {
+      if (settingsMenu) settingsMenu.classList.remove('is-open');
+      if (profileMenu) profileMenu.classList.remove('is-open');
+      if (settingsBtn) settingsBtn.setAttribute('aria-expanded', 'false');
+      if (profileBtn) profileBtn.setAttribute('aria-expanded', 'false');
+      if (filtersMenu) {
+        filtersMenu.classList.remove('is-open');
+        if (filtersBtn) filtersBtn.setAttribute('aria-expanded', 'false');
+      }
+      document.querySelectorAll('.row-overflow-menu.is-open').forEach(function (m) {
+        m.classList.remove('is-open');
+      });
+    });
+    var profileAccountBtn = document.getElementById('profile-account-btn');
+    var profileSubscriptionBtn = document.getElementById('profile-subscription-btn');
+    var profileLogoutBtn = document.getElementById('profile-logout-btn');
+    if (profileAccountBtn) profileAccountBtn.addEventListener('click', function () {
+      if (profileMenu) profileMenu.classList.remove('is-open');
+    });
+    if (profileSubscriptionBtn) profileSubscriptionBtn.addEventListener('click', function () {
+      if (profileMenu) profileMenu.classList.remove('is-open');
+    });
+    if (profileLogoutBtn) profileLogoutBtn.addEventListener('click', function () {
+      if (profileMenu) profileMenu.classList.remove('is-open');
+      window.location.href = 'login.html';
+    });
+    [document.getElementById('settings-language-btn'), document.getElementById('settings-theme-btn'),
+     document.getElementById('settings-notifications-btn'), document.getElementById('settings-shortcuts-btn'),
+     document.getElementById('settings-autosave-btn')].forEach(function (btn) {
+      if (btn) btn.addEventListener('click', function () {
+        if (settingsMenu) settingsMenu.classList.remove('is-open');
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>

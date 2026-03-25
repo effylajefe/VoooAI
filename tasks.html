@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tasks — VoooAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #060611;
+      --bg-surface: #10101b;
+      --accent-cyan: #00d4aa;
+      --accent-magenta: #e040fb;
+      --text-primary: #f5f5fb;
+      --text-muted: #8b8ba3;
+      --border-subtle: rgba(255,255,255,0.06);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      background-color: #000;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .logo:hover { opacity: 0.9; }
+    .logo-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon svg { width: 100%; height: 100%; }
+    .logo-text { font-weight: 600; font-size: 1.1rem; }
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+    .header-title { font-size: 1rem; color: var(--text-muted); }
+    .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .header-actions .settings-wrap { position: relative; }
+    .header-actions .settings-menu { right: 0; left: auto; }
+    .header-btn {
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      width: 38px;
+    }
+    .header-btn:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    .header-btn svg { width: 20px; height: 20px; }
+    .header-btn.profile {
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+      color: #020208;
+      border: none;
+    }
+    .header-btn.profile:hover { filter: brightness(1.08); }
+    .header-btn.text-btn {
+      width: auto;
+      padding: 0 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: 'Outfit', sans-serif;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .add-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 3px;
+      min-width: 170px;
+      background: rgba(16,16,27,0.98);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+      padding: 0.25rem 0;
+      z-index: 100;
+      display: none;
+    }
+    .add-dropdown-menu.is-open { display: block; }
+    .add-dropdown-section { padding: 0.2rem 0; }
+    .add-dropdown-section:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .add-dropdown-label {
+      padding: 0.25rem 0.6rem 0.15rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .add-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      width: 100%;
+      padding: 0.35rem 0.6rem;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .add-dropdown-item:hover { background: rgba(255,255,255,0.06); }
+    .add-dropdown-item svg { width: 14px; height: 14px; color: var(--text-muted); flex-shrink: 0; }
+    main {
+      flex: 1;
+      padding: 2rem 1.5rem;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+    }
+    .page-header-left h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    .page-header-left p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .page-header-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .btn-secondary:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    .btn-secondary svg { width: 14px; height: 14px; }
+    .filter-chips {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      padding: 0.35rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid var(--border-subtle);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .filter-chip:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+    }
+    .filter-chip.is-active {
+      background: var(--accent-cyan);
+      color: #020208;
+      border-color: var(--accent-cyan);
+      font-weight: 500;
+    }
+    .tasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .task-row:hover {
+      border-color: rgba(255,255,255,0.1);
+      background: rgba(16,16,27,0.9);
+    }
+    .task-row.is-running {
+      border-color: rgba(0,212,170,0.2);
+    }
+    .task-row.is-running::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-magenta));
+      animation: task-progress 2.4s ease-in-out infinite;
+      border-radius: 0 0 12px 12px;
+    }
+    @keyframes task-progress {
+      0%   { width: 0%; left: 0; }
+      50%  { width: 70%; left: 0; }
+      100% { width: 0%; left: 100%; }
+    }
+    .task-type-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+    .task-type-icon svg { width: 16px; height: 16px; }
+    .task-type-icon.cyan  { border-color: rgba(0,212,170,0.2);  background: rgba(0,212,170,0.08);  color: var(--accent-cyan); }
+    .task-type-icon.violet { border-color: rgba(124,106,247,0.2); background: rgba(124,106,247,0.08); color: #a89af9; }
+    .task-type-icon.magenta { border-color: rgba(224,64,251,0.2); background: rgba(224,64,251,0.08); color: var(--accent-magenta); }
+    .task-type-icon.amber { border-color: rgba(255,183,77,0.2); background: rgba(255,183,77,0.08); color: #ffb74d; }
+    .task-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .task-name {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.2rem;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .task-meta-sep { opacity: 0.4; }
+    .task-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.18rem 0.55rem;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+    .task-status.running {
+      background: rgba(0,212,170,0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(0,212,170,0.2);
+    }
+    .task-status.running .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      animation: status-pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes status-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.75); }
+    }
+    .task-status.completed {
+      background: rgba(0,212,170,0.08);
+      color: #5ee8c8;
+      border: 1px solid rgba(0,212,170,0.12);
+    }
+    .task-status.failed {
+      background: rgba(239,68,68,0.08);
+      color: #f87171;
+      border: 1px solid rgba(239,68,68,0.12);
+    }
+    .task-status.queued {
+      background: rgba(255,183,77,0.08);
+      color: #ffb74d;
+      border: 1px solid rgba(255,183,77,0.12);
+    }
+    .task-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .task-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: transparent;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .task-btn:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+    }
+    .task-btn.danger:hover {
+      color: #f87171;
+      border-color: rgba(239,68,68,0.3);
+      background: rgba(239,68,68,0.06);
+    }
+    .task-btn svg { width: 14px; height: 14px; }
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      margin: 1.25rem 0 0.5rem;
+    }
+    .section-label:first-child { margin-top: 0; }
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+    .empty-state svg {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+    .empty-state p { font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logo-v-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00d4aa"/>
+                <stop offset="100%" style="stop-color:#e040fb"/>
+              </linearGradient>
+              <filter id="logo-glow">
+                <feGaussianBlur stdDeviation="0.5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <circle cx="16" cy="16" r="14" fill="none" stroke="url(#logo-v-gradient)" stroke-width="1.2" filter="url(#logo-glow)"/>
+            <circle cx="16" cy="16" r="10" fill="none" stroke="rgba(0,0,0,0.5)" stroke-width="1"/>
+            <circle cx="16" cy="16" r="6" fill="none" stroke="rgba(0,0,0,0.6)" stroke-width="0.8"/>
+            <path d="M10 10 L16 22 L22 10" fill="none" stroke="url(#logo-v-gradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#logo-glow)"/>
+          </svg>
+        </div>
+        <div class="logo-text">VoooAI</div>
+      </a>
+      <span class="header-title">Tasks</span>
+    </div>
+    <div class="header-actions">
+      <a href="tasks.html" class="header-btn text-btn" style="text-decoration:none;" aria-label="Tasks">Tasks</a>
+      <a href="my-workflows.html" class="header-btn text-btn" style="text-decoration:none;" aria-label="My Workflows">My Workflows</a>
+      <div class="settings-wrap">
+        <button type="button" class="header-btn" id="settings-btn" aria-label="Settings" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <div class="add-dropdown-menu settings-menu" id="settings-menu" role="menu">
+          <div class="add-dropdown-section">
+            <div class="add-dropdown-label">Preferences</div>
+            <button type="button" class="add-dropdown-item" id="settings-language-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Language
+            </button>
+            <button type="button" class="add-dropdown-item" id="settings-theme-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2"/><path d="M12 21v2"/><path d="M4.22 4.22l1.42 1.42"/><path d="M18.36 18.36l1.42 1.42"/><path d="M1 12h2"/><path d="M21 12h2"/><path d="M4.22 19.78l1.42-1.42"/><path d="M18.36 5.64l1.42-1.42"/></svg>
+              Theme
+            </button>
+            <button type="button" class="add-dropdown-item" id="settings-notifications-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Notifications
+            </button>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="header-btn profile" id="profile-btn" aria-label="Profile" aria-haspopup="true" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>Tasks</h1>
+        <p>Track your AI generation jobs across all workflows</p>
+      </div>
+      <div class="page-header-actions">
+        <button type="button" class="btn-secondary" id="clear-completed-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Clear completed
+        </button>
+      </div>
+    </div>
+
+    <div class="filter-chips">
+      <button class="filter-chip is-active" data-filter="all">All</button>
+      <button class="filter-chip" data-filter="running">Running</button>
+      <button class="filter-chip" data-filter="queued">Queued</button>
+      <button class="filter-chip" data-filter="completed">Completed</button>
+      <button class="filter-chip" data-filter="failed">Failed</button>
+    </div>
+
+    <div id="tasks-container"></div>
+  </main>
+
+  <script>
+    var TASKS = [
+      { id: 't1', name: 'Product launch campaign', type: 'Image generation', typeColor: 'cyan', workflow: 'Campaign Workflow', status: 'running',   time: 'Just now',    duration: null },
+      { id: 't2', name: 'Wedding venue reel',      type: 'Video generation', typeColor: 'violet', workflow: 'Wedding Reel',     status: 'running',   time: '12s ago',     duration: null },
+      { id: 't3', name: 'Brand mood board',        type: 'Image generation', typeColor: 'cyan', workflow: 'Brand Kit',        status: 'queued',    time: 'Queued',      duration: null },
+      { id: 't4', name: 'Social carousel copy',    type: 'Text (Claude)',    typeColor: 'magenta', workflow: 'Social Post Bot', status: 'queued',    time: 'Queued',      duration: null },
+      { id: 't5', name: 'Product lifestyle shots', type: 'Image generation', typeColor: 'cyan', workflow: 'E-commerce Kit',   status: 'completed', time: '3 min ago',   duration: '1.2s' },
+      { id: 't6', name: 'Podcast intro music',     type: 'Audio generation', typeColor: 'amber', workflow: 'Podcast Workflow', status: 'completed', time: '8 min ago',   duration: '4.7s' },
+      { id: 't7', name: 'Explainer video',         type: 'Video generation', typeColor: 'violet', workflow: 'Blog to Video',   status: 'completed', time: '14 min ago',  duration: '9.1s' },
+      { id: 't8', name: 'Safety training slides',  type: 'Image generation', typeColor: 'cyan', workflow: 'Training Kit',     status: 'completed', time: '1 hr ago',    duration: '2.3s' },
+      { id: 't9', name: 'Virtual staging batch',   type: 'Image generation', typeColor: 'cyan', workflow: 'Staging Workflow', status: 'failed',    time: '22 min ago',  duration: null },
+      { id: 't10', name: 'CEO message video',      type: 'Video generation', typeColor: 'violet', workflow: 'Comms Workflow',  status: 'failed',    time: '2 hr ago',    duration: null },
+    ];
+
+    var TYPE_ICONS = {
+      'Image generation': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
+      'Video generation': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>',
+      'Audio generation': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+      'Text (Claude)':    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    };
+
+    var STATUS_LABELS = { running: 'Running', queued: 'Queued', completed: 'Completed', failed: 'Failed' };
+
+    var activeFilter = 'all';
+    var tasks = TASKS.slice();
+
+    function renderTasks() {
+      var container = document.getElementById('tasks-container');
+      var filtered = activeFilter === 'all' ? tasks : tasks.filter(function (t) { return t.status === activeFilter; });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><p>No tasks here</p></div>';
+        return;
+      }
+
+      var groups = [
+        { key: 'running',   label: 'Running' },
+        { key: 'queued',    label: 'Queued' },
+        { key: 'completed', label: 'Completed' },
+        { key: 'failed',    label: 'Failed' },
+      ];
+
+      var html = '';
+      groups.forEach(function (g) {
+        var group = filtered.filter(function (t) { return t.status === g.key; });
+        if (!group.length) return;
+        html += '<div class="section-label">' + g.label + ' · ' + group.length + '</div>';
+        html += '<div class="tasks-list" style="margin-bottom:0.25rem">';
+        group.forEach(function (t) {
+          var statusBadge = '';
+          if (t.status === 'running') {
+            statusBadge = '<span class="task-status running"><span class="status-dot"></span>Running</span>';
+          } else if (t.status === 'queued') {
+            statusBadge = '<span class="task-status queued">Queued</span>';
+          } else if (t.status === 'completed') {
+            statusBadge = '<span class="task-status completed">✓ Completed</span>';
+          } else if (t.status === 'failed') {
+            statusBadge = '<span class="task-status failed">✕ Failed</span>';
+          }
+
+          var durationStr = t.duration ? '<span class="task-meta-sep">·</span><span>' + t.duration + '</span>' : '';
+
+          var actions = '';
+          if (t.status === 'completed') {
+            actions += '<button class="task-btn" data-id="' + t.id + '" data-action="open" title="Open in workflow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button>';
+          }
+          if (t.status === 'failed') {
+            actions += '<button class="task-btn" data-id="' + t.id + '" data-action="retry" title="Retry"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg></button>';
+          }
+          if (t.status === 'running' || t.status === 'queued') {
+            actions += '<button class="task-btn danger" data-id="' + t.id + '" data-action="cancel" title="Cancel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
+          }
+          actions += '<button class="task-btn danger" data-id="' + t.id + '" data-action="delete" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
+
+          html += '<div class="task-row' + (t.status === 'running' ? ' is-running' : '') + '" data-id="' + t.id + '">' +
+            '<div class="task-type-icon ' + t.typeColor + '">' + (TYPE_ICONS[t.type] || '') + '</div>' +
+            '<div class="task-info">' +
+              '<div class="task-name">' + t.name.replace(/</g, '&lt;') + '</div>' +
+              '<div class="task-meta">' +
+                '<span>' + t.type + '</span>' +
+                '<span class="task-meta-sep">·</span>' +
+                '<span>' + t.workflow.replace(/</g, '&lt;') + '</span>' +
+                '<span class="task-meta-sep">·</span>' +
+                '<span>' + t.time + '</span>' +
+                durationStr +
+              '</div>' +
+            '</div>' +
+            statusBadge +
+            '<div class="task-actions">' + actions + '</div>' +
+          '</div>';
+        });
+        html += '</div>';
+      });
+
+      container.innerHTML = html;
+
+      container.querySelectorAll('.task-btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var id = btn.getAttribute('data-id');
+          var action = btn.getAttribute('data-action');
+          if (action === 'delete' || action === 'cancel') {
+            tasks = tasks.filter(function (t) { return t.id !== id; });
+            renderTasks();
+          } else if (action === 'open') {
+            window.location.href = 'workflow.html';
+          } else if (action === 'retry') {
+            var task = tasks.find(function (t) { return t.id === id; });
+            if (task) { task.status = 'queued'; task.time = 'Queued'; renderTasks(); }
+          }
+        });
+      });
+    }
+
+    document.querySelectorAll('.filter-chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        document.querySelectorAll('.filter-chip').forEach(function (c) { c.classList.remove('is-active'); });
+        chip.classList.add('is-active');
+        activeFilter = chip.getAttribute('data-filter');
+        renderTasks();
+      });
+    });
+
+    document.getElementById('clear-completed-btn').addEventListener('click', function () {
+      tasks = tasks.filter(function (t) { return t.status !== 'completed'; });
+      renderTasks();
+    });
+
+    var settingsBtn = document.getElementById('settings-btn');
+    var settingsMenu = document.getElementById('settings-menu');
+    if (settingsBtn && settingsMenu) {
+      settingsBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        settingsMenu.classList.toggle('is-open');
+        settingsBtn.setAttribute('aria-expanded', settingsMenu.classList.contains('is-open'));
+      });
+      settingsMenu.addEventListener('click', function (e) { e.stopPropagation(); });
+    }
+    document.addEventListener('click', function () {
+      if (settingsMenu) settingsMenu.classList.remove('is-open');
+    });
+
+    renderTasks();
+  </script>
+</body>
+</html>

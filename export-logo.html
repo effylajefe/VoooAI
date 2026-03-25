@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Export Logo</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: #060611;
+      font-family: system-ui, sans-serif;
+      color: #f5f5fb;
+    }
+    .export-wrapper {
+      display: inline-block;
+      padding: 20px;
+      background: transparent;
+    }
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00d4aa, #e040fb);
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 8px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: white;
+    }
+    .controls {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #f5f5fb;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    button:hover {
+      background: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+  <p>Logo export — click to download PNG (2x for sharp display in Figma):</p>
+  <div class="export-wrapper" id="export-area">
+    <div class="logo-icon">V</div>
+  </div>
+  <div class="controls">
+    <button onclick="exportPNG(2, true)">Download PNG — 96×96 (tight)</button>
+    <button onclick="exportPNG(4, true)">Download PNG — 192×192 (tight)</button>
+    <button onclick="exportPNG(4, false)">Download PNG — 176×176 (with padding)</button>
+  </div>
+
+  <script>
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    async function exportPNG(scale, tight = true) {
+      await document.fonts.ready;
+      const pad = tight ? 0 : 20 * scale;
+      const lw = 48 * scale;
+      const lh = 48 * scale;
+      const totalW = pad * 2 + lw;
+      const totalH = pad * 2 + lh;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = totalW;
+      canvas.height = totalH;
+      const ctx = canvas.getContext('2d');
+
+      const cx = pad + lw / 2;
+      const cy = pad + lh / 2;
+      const r = 10 * scale;
+
+      const grad = ctx.createLinearGradient(pad, pad, pad + lw, pad + lh);
+      grad.addColorStop(0, '#00d4aa');
+      grad.addColorStop(1, '#e040fb');
+
+      roundRect(ctx, pad, pad, lw, lh, r);
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+      ctx.lineWidth = 1 * scale;
+      ctx.stroke();
+
+      ctx.save();
+      ctx.beginPath();
+      roundRect(ctx, pad, pad, lw, lh, r);
+      ctx.clip();
+      const hlGrad = ctx.createLinearGradient(pad, pad, pad, pad + 8 * scale);
+      hlGrad.addColorStop(0, 'rgba(255,255,255,0.2)');
+      hlGrad.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = hlGrad;
+      ctx.fillRect(pad, pad, lw, 8 * scale);
+      ctx.restore();
+
+      ctx.font = `700 ${22 * scale}px "JetBrains Mono", monospace`;
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('V', cx, cy);
+
+      const link = document.createElement('a');
+      link.download = 'voooai-logo.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>

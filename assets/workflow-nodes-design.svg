@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" width="1200" height="520">
+  <defs>
+    <style>
+      .node-title { font-family: Outfit, -apple-system, sans-serif; font-size: 8px; font-weight: 600; fill: #f0f0f5; }
+      .node-content { font-family: Outfit, -apple-system, sans-serif; font-size: 7px; fill: rgba(255,255,255,0.9); }
+    </style>
+  </defs>
+  <!-- Background -->
+  <rect width="1200" height="520" fill="#0a0a0f"/>
+  
+  <!-- Connection links (Bezier curves) -->
+  <path d="M 244 140 C 260 140 272 140 276 160" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 244 300 C 260 300 272 300 276 360" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 496 160 C 512 160 524 160 528 160" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 496 360 C 512 360 524 360 528 160" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 748 160 C 764 160 776 160 780 160" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- File input -->
+  <g id="node-file-input">
+    <rect x="24" y="80" width="220" height="120" rx="14" fill="#1e2938" stroke="rgba(100,116,139,0.5)" stroke-width="1"/>
+    <rect x="30" y="122" width="208" height="68" rx="6" fill="#151c28"/>
+    <text x="134" y="108" text-anchor="middle" class="node-title">File input</text>
+    <text x="134" y="158" text-anchor="middle" class="node-content">Upload or select a file...</text>
+    <circle cx="244" cy="140" r="6" fill="#151c28" stroke="rgba(255,255,255,0.3)"/>
+  </g>
+  
+  <!-- Prompt input -->
+  <g id="node-prompt-input">
+    <rect x="24" y="240" width="220" height="120" rx="14" fill="#1e2938" stroke="rgba(100,116,139,0.5)" stroke-width="1"/>
+    <rect x="30" y="282" width="208" height="68" rx="6" fill="#151c28"/>
+    <text x="134" y="268" text-anchor="middle" class="node-title">Prompt input</text>
+    <text x="134" y="318" text-anchor="middle" class="node-content">Enter your prompt here...</text>
+    <circle cx="244" cy="300" r="6" fill="#151c28" stroke="rgba(255,255,255,0.3)"/>
+  </g>
+  
+  <!-- Image engine (DALL-E 3) - theme-cyan -->
+  <g id="node-image-engine">
+    <rect x="276" y="80" width="220" height="160" rx="14" fill="#1a2f38" stroke="rgba(0,212,170,0.5)" stroke-width="1"/>
+    <rect x="282" y="136" width="208" height="104" rx="6" fill="#132228"/>
+    <text x="386" y="108" text-anchor="middle" class="node-title">Image  DALL-E 3</text>
+    <text x="386" y="188" text-anchor="middle" class="node-content">Output will appear here</text>
+    <circle cx="276" cy="160" r="6" fill="#132228" stroke="rgba(255,255,255,0.3)"/>
+    <circle cx="496" cy="160" r="6" fill="#132228" stroke="rgba(255,255,255,0.3)"/>
+  </g>
+  
+  <!-- Video engine (Sora) - theme-violet -->
+  <g id="node-video-engine">
+    <rect x="276" y="280" width="220" height="160" rx="14" fill="#2a1f3d" stroke="rgba(139,92,246,0.5)" stroke-width="1"/>
+    <rect x="282" y="336" width="208" height="104" rx="6" fill="#1f1630"/>
+    <text x="386" y="308" text-anchor="middle" class="node-title">Video  Sora</text>
+    <text x="386" y="388" text-anchor="middle" class="node-content">Output will appear here</text>
+    <circle cx="276" cy="360" r="6" fill="#1f1630" stroke="rgba(255,255,255,0.3)"/>
+    <circle cx="496" cy="360" r="6" fill="#1f1630" stroke="rgba(255,255,255,0.3)"/>
+  </g>
+  
+  <!-- Bot (Claude) - theme-slate -->
+  <g id="node-bot-claude">
+    <rect x="528" y="80" width="220" height="200" rx="14" fill="#1e2938" stroke="rgba(100,116,139,0.5)" stroke-width="1"/>
+    <rect x="534" y="136" width="208" height="72" rx="6" fill="#151c28"/>
+    <rect x="534" y="218" width="208" height="52" rx="6" fill="#F0FFF4"/>
+    <text x="638" y="108" text-anchor="middle" class="node-title">Bot  Claude</text>
+    <text x="638" y="178" text-anchor="middle" class="node-content">Describe what you want the bot to do...</text>
+    <text x="638" y="248" text-anchor="middle" style="font-family:Outfit,sans-serif;font-size:6px;fill:#166534">Generated Output</text>
+    <circle cx="496" cy="160" r="6" fill="#151c28" stroke="rgba(255,255,255,0.3)"/>
+    <circle cx="748" cy="160" r="6" fill="#151c28" stroke="rgba(255,255,255,0.3)"/>
+  </g>
+  
+  <!-- Export All - theme-amber -->
+  <g id="node-export-all">
+    <rect x="780" y="120" width="220" height="120" rx="14" fill="#3d2e1a" stroke="rgba(245,158,11,0.5)" stroke-width="1"/>
+    <rect x="786" y="162" width="208" height="68" rx="6" fill="#2d2212"/>
+    <text x="890" y="148" text-anchor="middle" class="node-title">Bot  Export All</text>
+    <text x="890" y="208" text-anchor="middle" class="node-content">Export all generated content</text>
+    <circle cx="748" cy="160" r="6" fill="#2d2212" stroke="rgba(255,255,255,0.3)"/>
+  </g>
+  
+  <!-- Labels for Figma -->
+  <text x="24" y="60" fill="rgba(255,255,255,0.5)" font-size="10" font-family="Outfit,sans-serif">Workflow node design system  Import into Figma (File ù Place image)</text>
+</svg>
