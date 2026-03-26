@@ -1222,6 +1222,7 @@
         </div>
         <div class="gen-result" id="gen-result">
           <img id="gen-result-img" alt="Generated result" crossorigin="anonymous">
+          <video id="gen-result-video" autoplay muted loop playsinline style="display:none; max-width:100%; max-height:100%; border-radius:6px; object-fit:cover;"></video>
         </div>
       </div>
       <div id="gen-result-actions" style="display:none;">
@@ -1237,17 +1238,17 @@
         <div class="gen-modal-section">
           <h3 class="gen-section-title">Export</h3>
           <div class="gen-export-row">
-            <button type="button" class="gen-export-btn" id="gen-export-png">
+            <button type="button" class="gen-export-btn" id="gen-export-btn-1" data-format="png">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              PNG
+              <span>PNG</span>
             </button>
-            <button type="button" class="gen-export-btn" id="gen-export-jpg">
+            <button type="button" class="gen-export-btn" id="gen-export-btn-2" data-format="jpeg">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              JPG
+              <span>JPG</span>
             </button>
-            <button type="button" class="gen-export-btn" id="gen-export-webp">
+            <button type="button" class="gen-export-btn" id="gen-export-btn-3" data-format="webp">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              WebP
+              <span>WebP</span>
             </button>
           </div>
         </div>
@@ -1316,7 +1317,8 @@
       var genPreviewWrap = document.getElementById('gen-preview-wrap');
       var genLoadingText = document.getElementById('gen-loading-text');
       var genProgressBar = document.getElementById('gen-progress-bar');
-      var genResultImg = document.getElementById('gen-result-img');
+      var genResultImg   = document.getElementById('gen-result-img');
+      var genResultVideo = document.getElementById('gen-result-video');
       var genResultActions = document.getElementById('gen-result-actions');
       var genAdvancedToggle = document.getElementById('gen-advanced-toggle');
       var genAdvancedContent = document.getElementById('gen-advanced-content');
@@ -1367,6 +1369,41 @@
         }
       }
 
+      var IMAGE_FORMATS = [{ label: 'PNG', format: 'png' }, { label: 'JPG', format: 'jpeg' }, { label: 'WebP', format: 'webp' }];
+      var VIDEO_FORMATS = [{ label: 'MP4', format: 'mp4' }, { label: 'MOV', format: 'mov' }, { label: 'GIF', format: 'gif' }];
+
+      // Keyword → Mixkit CDN clip mapping (free-license short clips)
+      var VIDEO_CLIPS = [
+        { keywords: ['storm', 'mountain', 'timelapse', 'clouds rolling'],   src: 'https://assets.mixkit.co/videos/48819/48819-720.mp4' },
+        { keywords: ['coffee', 'splash', 'cup', 'slow-motion'],             src: 'https://assets.mixkit.co/videos/209/209-720.mp4' },
+        { keywords: ['drone', 'neon', 'city', 'cyberpunk', 'flyover'],      src: 'https://assets.mixkit.co/videos/50989/50989-720.mp4' },
+        { keywords: ['woman', 'rain', 'umbrella', 'rainy street'],          src: 'https://assets.mixkit.co/videos/17291/17291-720.mp4' },
+        { keywords: ['golden retriever', 'dog', 'beach', 'waves'],          src: 'https://assets.mixkit.co/videos/25139/25139-720.mp4' },
+        { keywords: ['tokyo', 'intersection', 'crowd', 'pedestrian'],       src: 'https://assets.mixkit.co/videos/30143/30143-720.mp4' }
+      ];
+      var VIDEO_FALLBACK = 'https://assets.mixkit.co/videos/49815/49815-720.mp4';
+
+      function pickVideoClip(prompt) {
+        var lower = prompt.toLowerCase();
+        for (var i = 0; i < VIDEO_CLIPS.length; i++) {
+          var clip = VIDEO_CLIPS[i];
+          for (var j = 0; j < clip.keywords.length; j++) {
+            if (lower.indexOf(clip.keywords[j]) !== -1) return clip.src;
+          }
+        }
+        return VIDEO_FALLBACK;
+      }
+
+      function updateExportButtons(isVideo) {
+        var formats = isVideo ? VIDEO_FORMATS : IMAGE_FORMATS;
+        [1, 2, 3].forEach(function (i) {
+          var btn = document.getElementById('gen-export-btn-' + i);
+          if (!btn) return;
+          btn.setAttribute('data-format', formats[i - 1].format);
+          btn.querySelector('span').textContent = formats[i - 1].label;
+        });
+      }
+
       // ── Open generation modal ──
       function openGenModal(prompt) {
         var isVideo = activeTab === 'video';
@@ -1380,7 +1417,11 @@
         genAdvancedContent.classList.remove('is-open');
         genAdvancedToggle.setAttribute('aria-expanded', 'false');
         genAdvancedContent.innerHTML = buildAdvancedHtml();
+        updateExportButtons(isVideo);
         genResultImg.src = '';
+        genResultVideo.src = '';
+        genResultVideo.style.display = 'none';
+        genResultImg.style.display = isVideo ? 'none' : '';
         genProgressBar.style.width = '0%';
 
         // Open overlay
@@ -1395,27 +1436,54 @@
           genProgressBar.style.width = progress + '%';
         }, 200);
 
-        // Load placeholder image (picsum seeded by prompt hash)
-        var seed = Math.abs((prompt + Date.now()).split('').reduce(function (a, c) {
-          return ((a << 5) - a) + c.charCodeAt(0);
-        }, 0));
-        var imgUrl = 'https://picsum.photos/seed/' + seed + '/512/512';
-
-        genResultImg.onload = function () {
-          clearInterval(progressInterval);
-          genProgressBar.style.width = '100%';
-          setTimeout(function () {
+        if (isVideo) {
+          // Load matching short video clip
+          var videoUrl = pickVideoClip(prompt);
+          genResultVideo.oncanplay = function () {
+            clearInterval(progressInterval);
+            genProgressBar.style.width = '100%';
+            setTimeout(function () {
+              genPreviewWrap.classList.remove('is-loading');
+              genResultVideo.style.display = 'block';
+              genResultActions.style.display = 'block';
+              genModalTitle.textContent = 'Video ready';
+            }, 300);
+          };
+          genResultVideo.onerror = function () {
+            clearInterval(progressInterval);
+            genProgressBar.style.width = '100%';
             genPreviewWrap.classList.remove('is-loading');
+            genResultVideo.style.display = 'block';
             genResultActions.style.display = 'block';
-            genModalTitle.textContent = isVideo ? 'Video ready' : 'Image ready';
-          }, 300);
-        };
-        genResultImg.onerror = function () {
-          clearInterval(progressInterval);
-          genProgressBar.style.width = '100%';
-          genResultImg.src = 'https://picsum.photos/512/512?t=' + Date.now();
-        };
-        setTimeout(function () { genResultImg.src = imgUrl; }, 400);
+            genModalTitle.textContent = 'Video ready';
+          };
+          setTimeout(function () {
+            genResultVideo.src = videoUrl;
+            genResultVideo.load();
+          }, 400);
+        } else {
+          // Load placeholder image (picsum seeded by prompt hash)
+          var seed = Math.abs((prompt + Date.now()).split('').reduce(function (a, c) {
+            return ((a << 5) - a) + c.charCodeAt(0);
+          }, 0));
+          var imgUrl = 'https://picsum.photos/seed/' + seed + '/512/512';
+
+          genResultImg.onload = function () {
+            clearInterval(progressInterval);
+            genProgressBar.style.width = '100%';
+            setTimeout(function () {
+              genPreviewWrap.classList.remove('is-loading');
+              genResultActions.style.display = 'block';
+              genModalTitle.textContent = 'Image ready';
+            }, 300);
+          };
+          genResultImg.onerror = function () {
+            clearInterval(progressInterval);
+            genProgressBar.style.width = '100%';
+            genResultImg.src = 'https://picsum.photos/512/512?t=' + Date.now();
+          };
+          setTimeout(function () { genResultImg.src = imgUrl; }, 400);
+        }
 
         // Update Try Workflow link
         var params = 'prompt=' + encodeURIComponent(prompt) + '&type=' + activeTab;
@@ -1425,6 +1493,7 @@
       function closeGenModal() {
         genModal.classList.remove('is-open');
         genModal.setAttribute('aria-hidden', 'true');
+        if (genResultVideo) { genResultVideo.pause(); genResultVideo.src = ''; }
       }
 
       function onSubmit() {
@@ -1439,9 +1508,17 @@
 
       // ── Export helpers ──
       function exportImage(format) {
+        var ext = format === 'jpeg' ? 'jpg' : format;
+        // Video formats: download the current video clip
+        if (format === 'mp4' || format === 'mov' || format === 'gif') {
+          var videoSrc = genResultVideo && genResultVideo.src ? genResultVideo.src : '';
+          if (!videoSrc) return;
+          var a = document.createElement('a');
+          a.href = videoSrc; a.download = 'voooai-generated.' + ext; a.target = '_blank'; a.click();
+          return;
+        }
         var img = genResultImg;
         if (!img || !img.src) return;
-        var ext = format === 'jpeg' ? 'jpg' : format;
         fetch(img.src, { mode: 'cors' })
           .then(function (r) { return r.blob(); })
           .then(function (blob) {
@@ -1491,12 +1568,12 @@
         });
       }
 
-      var exportPng  = document.getElementById('gen-export-png');
-      var exportJpg  = document.getElementById('gen-export-jpg');
-      var exportWebp = document.getElementById('gen-export-webp');
-      if (exportPng)  exportPng.addEventListener('click',  function () { exportImage('png'); });
-      if (exportJpg)  exportJpg.addEventListener('click',  function () { exportImage('jpeg'); });
-      if (exportWebp) exportWebp.addEventListener('click', function () { exportImage('webp'); });
+      [1, 2, 3].forEach(function (i) {
+        var btn = document.getElementById('gen-export-btn-' + i);
+        if (btn) btn.addEventListener('click', function () {
+          exportImage(this.getAttribute('data-format'));
+        });
+      });
 
       setActiveTab('image');
 
